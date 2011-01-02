@@ -3,26 +3,24 @@ require 'thor/group'
 
 module Amiba
 
-
-    class Generator < Thor::Group
-      include Thor::Action
+  class Generator < Thor::Group
+    include Thor::Action
     
-      class << self
-        
-        def source_root(path = nil)
-          default_source_root
-        end
-        
-        def default_source_root
-          File.dirname(File.expand_path(File.join(__FILE__, "..")))
-        end
-        
-        def in_amiba_application?
-          File.exist? ".amiba"
-        end
+    class << self
+      
+      def source_root(path = nil)
+        default_source_root
+      end
+      
+      def default_source_root
+        File.dirname(File.expand_path(File.join(__FILE__, "..")))
+      end
+      
+      def in_amiba_application?
+        File.exist? ".amiba"
       end
     end
-
+  end
 
   class Create < Generator
 
