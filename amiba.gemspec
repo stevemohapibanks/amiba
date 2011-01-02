@@ -8,12 +8,10 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Steven Mohapi-Banks"]
   s.email       = ["s.mohapi-banks@digital-science.com"]
-  s.summary     = ""
-  s.description = ""
  
   s.required_rubygems_version = ">= 1.3.6"
  
-  s.files        = Dir.glob("{bin,lib,templates}/**/*") + %w{Thorfile Gemfile Rakefile}
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.files        = Dir.glob("{bin,lib,templates}/**/*") + %w{Thorfile Gemfile}
+  s.executable   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_path = 'lib'
 end
