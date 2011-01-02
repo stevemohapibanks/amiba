@@ -1,0 +1,8 @@
+title: <%= page[:title] %>
+description: <%= page[:description] %>
+
+===
+
+h1. Put your title here
+
+p. Put your page body here
