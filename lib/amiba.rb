@@ -4,8 +4,8 @@ require 'thor/group'
 module Amiba
 
   class Generator < Thor::Group
-    include Thor::Action
-    
+    include Thor::Actions
+
     class << self
       
       def source_root(path = nil)

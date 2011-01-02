@@ -2,5 +2,7 @@
 # -*- mode: ruby -*-
 
 require 'thor/runner'
+require 'amiba'
+
 $thor_runner = true
 Thor::Runner.start
