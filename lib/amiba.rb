@@ -1,5 +1,6 @@
 require 'thor'
 require 'thor/group'
+require 'active_support/inflector'
 
 module Amiba
 
@@ -45,7 +46,10 @@ module Amiba
 
     def create_default_page
       require 'amiba/page'
-      Amiba::Page::Create.start([options[:default_page]])
+      Amiba::Page::Create.start([options[:default_page],
+                                 "--root_dir", name,
+                                 "--title", name.titleize,
+                                 "--description", "#{name.titleize} Homepage. Please change this to be more descriptive"])
     end
 
   end
