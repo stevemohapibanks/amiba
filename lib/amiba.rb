@@ -46,16 +46,18 @@ module Amiba
 
     def create_default_page
       require 'amiba/page'
-      Amiba::Page::Create.start([options[:default_page],
-                                 "--root_dir", name,
-                                 "--title", name.titleize,
-                                 "--description", "#{name.titleize} Homepage. Please change this to be more descriptive"])
+      inside(name, :verbose => true) do
+        invoke(Amiba::Page::Create,
+               [options[:default_page]],
+               :title => name.titleize,
+               :description => "#{name.titleize} Homepage. Please change this to be more descriptive")
+      end   
     end
-
   end
 end
 
 if Amiba::Util.in_amiba_application?
   require 'amiba/page'
+  require 'amiba/site'
 end
 

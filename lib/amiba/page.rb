@@ -1,6 +1,26 @@
+require 'yaml'
+
 module Amiba
   module Page
 
+    class Templates
+      class << self
+        def haml
+          <<-HAML
+%h1 Title
+%p Body
+HAML
+        end
+
+        def markdown
+          <<-MD
+h1. Title
+p. Body
+MD
+        end
+      end
+    end
+    
     class Create < Thor::Group
       include Amiba::Generator
 
@@ -10,30 +30,18 @@ module Amiba
       class_option :title, :required => true, :default => "Default title"
       class_option :description, :default => "Default description"
 
-      class_option :root_dir
-
       def create_page
-        @page = {
-          :title => options[:title],
-          :description => options[:description],
-          :layout => options[:layout]
-        }
-        template(source_filename, target_filename)
+        metadata = options.reject {|k| [:format, :root_dir].include?(k.to_sym)}
+        content = Templates.send(options[:format])
+
+        create_file(target_filename) do
+          YAML.dump(metadata) + YAML.dump(content)
+        end
       end
 
       no_tasks do
-
-        def source_filename
-          "templates/skeletons/page.#{options[:format].to_s}.tt"
-        end
-        
         def target_filename
-          root_dir = if options[:root_dir]
-                       options[:root_dir] + '/'
-                     else
-                       ''
-                     end
-          "#{root_dir}pages/#{name}.#{options[:format].to_s}"
+          "pages/#{name}.#{options[:format].to_s}"
         end
       end
 
