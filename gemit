@@ -1,0 +1,5 @@
+#!/bin/bash
+gem uninstall amiba
+rm amiba-0.0.1.gem
+gem build amiba.gemspec
+gem install amiba-0.0.1.gem

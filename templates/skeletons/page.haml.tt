@@ -1,8 +1,9 @@
-title: <%= page[:title] %>
-description: <%= page[:description] %>
+title: <%= @page[:title] %>
+description: <%= @page[:description] %>
+layout: <%= @page[:layout] %>
 
 ===
 
-h1. Put your title here
+%h1 Put your title here
 
-p. Put your page body here
+%p Put your page body here

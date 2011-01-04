@@ -1,26 +1,35 @@
 module Amiba
   module Page
 
-    class Create < Amiba::Generator
+    class Create < Thor::Group
+      include Amiba::Generator
 
       argument :name
-      class_option :with_layout, :default => "default"
-      class_option :title, :default => "Title"
-      class_option :description, :default => "Description"
+      class_option :layout, :default => "default"
+      class_option :format, :default => :haml
+      class_option :title, :required => true, :default => "Default title"
+      class_option :description, :default => "Default description"
 
-      def page
-        @page = {:title => options[:title], :description => options[:description]}
-        template "templates/skeletons/page.md.tt", "pages/#{name}.md"
+      class_option :project_dir, :default => Dir.pwd
+
+      def create_page
+        @page = {
+          :title => options[:title],
+          :description => options[:description],
+          :layout => options[:layout]
+        }
+        ext = options[:format].to_s
+        template("templates/skeletons/page.#{ext}.tt",
+                 "pages/#{name}.#{ext}")
       end
 
     end
 
-    class Destroy < Amiba::Generator
-
-      argument :name
+    class Destroy < Thor::Group
+      include Amiba::Generator
 
       def page
-        remove_file "pages/#{name}.md" if ask("Are you sure? This is irreversible (y/n): ")
+        remove_file "pages/#{name}.*" if ask("Are you sure? This is irreversible (y/n): ")
       end
       
     end

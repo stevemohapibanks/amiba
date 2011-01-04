@@ -3,11 +3,20 @@ require 'thor/group'
 
 module Amiba
 
-  class Generator < Thor::Group
-    include Thor::Actions
+  class Util
+    def self.in_amiba_application?
+      File.exist? ".amiba"
+    end
+  end
 
-    class << self
-      
+  module Generator
+
+    def self.included(base)
+      base.send :include, Thor::Actions
+      base.send :extend, ClassMethods
+    end
+
+    module ClassMethods
       def source_root(path = nil)
         default_source_root
       end
@@ -16,14 +25,14 @@ module Amiba
         File.dirname(File.expand_path(File.join(__FILE__, "..")))
       end
       
-      def in_amiba_application?
-        File.exist? ".amiba"
-      end
     end
   end
 
-  class Create < Generator
-
+  class Create < Thor::Group
+    include Generator
+    
+    namespace :create
+    
     argument :name
     class_option :default_page, :default => "home"
 
@@ -35,16 +44,14 @@ module Amiba
     end
 
     def create_default_page
-      Dir.chdir(name) do
-        require 'amiba/page'
-        Amiba::Page::Create.start([options[:default_page]])
-      end
+      require 'amiba/page'
+      Amiba::Page::Create.start([options[:default_page]])
     end
 
   end
 end
 
-if Amiba::Generator.in_amiba_application?
+if Amiba::Util.in_amiba_application?
   require 'amiba/page'
 end
 
