@@ -24,6 +24,7 @@ MD
     class Create < Thor::Group
       include Amiba::Generator
 
+      namespace :"page:create"
       argument :name
       class_option :layout, :default => "default"
       class_option :format, :default => :haml
@@ -50,11 +51,16 @@ MD
     class Destroy < Thor::Group
       include Amiba::Generator
 
+      namespace :"page:destroy"
       argument :name
       class_option :format, :default => :haml
 
       def page
-        remove_file "pages/#{name}.#{options[:format].to_s}" if ask("Are you sure? This is irreversible (y/n): ")
+        Dir.glob("pages/#{name}.*") do |fn|
+          if ask("Are you sure you want to delete #{fn}? This is irreversible (y/n): ")
+            remove_file(fn)
+          end
+        end
       end
       
     end
