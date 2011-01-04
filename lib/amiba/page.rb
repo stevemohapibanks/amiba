@@ -43,9 +43,10 @@ module Amiba
       include Amiba::Generator
 
       argument :name
+      class_option :format, :default => :haml
 
       def page
-        remove_file "pages/#{name}.*" if ask("Are you sure? This is irreversible (y/n): ")
+        remove_file "pages/#{name}.#{options[:format].to_s}" if ask("Are you sure? This is irreversible (y/n): ")
       end
       
     end
