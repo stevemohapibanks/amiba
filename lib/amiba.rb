@@ -24,8 +24,7 @@ module Amiba
       
       def default_source_root
         File.dirname(File.expand_path(File.join(__FILE__, "..")))
-      end
-      
+      end      
     end
   end
 
@@ -38,12 +37,18 @@ module Amiba
     class_option :default_page, :default => "home"
 
     def create_project_structure
+      create_file File.join(name, ".amiba")
       %w{pages posts layouts}.each {|dirname|
         directory File.join("templates", dirname), File.join(name, dirname)
       }
-      create_file(File.join(name, ".amiba"))
     end
 
+    def create_assets_structure
+      %w{public/js public/css}.each do |dirname|
+        empty_directory File.join(name, dirname)
+      end
+    end
+    
     def create_default_page
       require 'amiba/page'
       inside(name, :verbose => true) do

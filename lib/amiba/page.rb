@@ -30,6 +30,7 @@ MD
       class_option :format, :default => :haml
       class_option :title, :required => true, :default => "Default title"
       class_option :description, :default => "Default description"
+      class_option :type, :default => "plain"
 
       def create_page
         metadata = options.reject {|k| [:format, :root_dir].include?(k.to_sym)}
