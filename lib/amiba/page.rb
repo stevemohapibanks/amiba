@@ -3,24 +3,6 @@ require 'yaml'
 module Amiba
   module Page
 
-    class Templates
-      class << self
-        def haml
-          <<-HAML
-%h1 Title
-%p Body
-HAML
-        end
-
-        def markdown
-          <<-MD
-h1. Title
-p. Body
-MD
-        end
-      end
-    end
-    
     class Create < Thor::Group
       include Amiba::Generator
 
@@ -33,6 +15,8 @@ MD
       class_option :type, :default => "plain"
 
       def create_page
+        raise Thor::Error.new("#{name} has already been created.") if exists?
+        
         metadata = options.reject {|k| [:format, :root_dir].include?(k.to_sym)}
         content = Templates.send(options[:format])
 
@@ -44,6 +28,10 @@ MD
       no_tasks do
         def target_filename
           "pages/#{name}.#{options[:format].to_s}"
+        end
+
+        def exists?
+          !Dir.glob("pages/#{name}.*").empty?
         end
       end
 
@@ -65,5 +53,49 @@ MD
       end
       
     end
+
+    class Build < Thor::Group
+      include Amiba::Generator
+
+      namespace :"page:build"
+      argument :page
+      
+      def load_file_contents
+        File.open(page_filename) do |f|
+          documents = YAML.load(f)
+          @metadata, @content = documents
+        end
+      end
+
+      no_tasks do
+        def page_filename
+          Dir.glob("pages/#{page}.*").first
+        end
+      end
+      
+    end
+
+    class List < Thor::Group
+      include Amiba::Generator
+
+      namespace :"page:list"
+
+      def list
+        Dir.glob("pages/*").each {|p| say File.basename(p)}
+      end
+    end
+    
+    class Templates
+      class << self
+        def haml
+          "%h1 Title\n%p Body\n"
+        end
+
+        def markdown
+          "h1. Title\np. Body\n"
+        end
+      end
+    end
+
   end
 end

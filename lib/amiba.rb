@@ -44,7 +44,7 @@ module Amiba
     end
 
     def create_assets_structure
-      %w{public/js public/css}.each do |dirname|
+      %w{public/js public/css public/images}.each do |dirname|
         empty_directory File.join(name, dirname)
       end
     end
