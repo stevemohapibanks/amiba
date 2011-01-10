@@ -4,6 +4,9 @@ require 'active_support/inflector'
 
 module Amiba
 
+  STAGED_DIR = "staged"
+  SITE_DIR = "site"
+
   class Util
     def self.in_amiba_application?
       File.exist? ".amiba"

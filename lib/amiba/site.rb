@@ -1,3 +1,5 @@
+require 'haml'
+require 'sass'
 require 'tilt'
 
 module Amiba
@@ -12,16 +14,21 @@ module Amiba
         Dir.pwd
       end
 
+      def cleardown
+        remove_dir Amiba::SITE_DIR
+        remove_dir Amiba::STAGED_DIR
+      end
+
       def create_site_structure
-        empty_directory "site"
+        empty_directory Amiba::SITE_DIR
       end
       
       def copy_javascript
-        directory "public/js", "site/public/js"
+        directory "public/js", File.join(Amiba::SITE_DIR, "public/js")
       end
 
       def copy_images
-        directory "public/images", "site/public/images"
+        directory "public/images", File.join(Amiba::SITE_DIR, "/public/images")
       end
 
       def process_and_copy_sass
@@ -35,7 +42,7 @@ module Amiba
       def build_pages
         Dir.glob('pages/*').each do |page_file|
           invoke(Amiba::Page::Build,
-                 [File.basename(page_file).gsub(File.extname(page_file, ''))])
+                 [File.basename(page_file).gsub(File.extname(page_file), '')])
         end
       end
 
