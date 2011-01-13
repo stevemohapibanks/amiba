@@ -6,6 +6,7 @@ module Amiba
 
   STAGED_DIR = "staged"
   SITE_DIR = "site"
+  POSTS_DIR = "posts"
 
   class Util
     def self.in_amiba_application?
@@ -66,6 +67,7 @@ end
 
 if Amiba::Util.in_amiba_application?
   require 'amiba/page'
+  require 'amiba/post'
   require 'amiba/site'
 end
 

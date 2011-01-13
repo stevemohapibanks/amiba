@@ -3,7 +3,6 @@ require 'yaml'
 module Amiba
   module Page
 
-
     # Simple helper class to track filenames, file contents, etc of
     # a page source file.
     class Source
@@ -55,7 +54,6 @@ module Amiba
         @documents ||= YAML.load_stream(File.read(filename)).documents
       end
     end
-
     
     # Thor task to create a new page. It checks for the existance of a page already existing
     # and that the user specified a valid format before progressing.
@@ -151,16 +149,6 @@ module Amiba
         end
       end
 
-      no_tasks do
-        def page_filename
-          Dir.glob("pages/#{page}.*").first
-        end
-
-        def staging_page_filename
-          "staging/#{page_filename}"
-        end
-      end
-      
     end
 
 
