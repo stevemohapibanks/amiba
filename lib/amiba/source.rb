@@ -1,6 +1,8 @@
 require 'yaml'
+require 'thor'
 require 'active_support'
 require 'active_support/hash_with_indifferent_access'
+require 'active_model'
 
 module Amiba
   module Source
@@ -9,6 +11,8 @@ module Amiba
       base.send :include, InstanceMethods
       base.send :extend, ClassMethods
       base.send :attr_reader, :name
+      base.send :include, ActiveModel::Validations
+
     end
 
     module ClassMethods
@@ -28,7 +32,7 @@ module Amiba
       end
 
       def pluralized_name
-        name.demodulize.downcase.pluralize
+        name.demodulize.tableize
       end
 
     end
@@ -47,6 +51,16 @@ module Amiba
 
       def new?
         !File.exist?(source_filename)
+      end
+
+      def metadata_and_content
+        YAML.dump(metadata) + YAML.dump(content)
+      end
+
+      def save(&block)
+        return false unless valid?
+        yield source_filename, metadata_and_content
+        true
       end
 
       protected
@@ -89,5 +103,20 @@ module Amiba
       end
 
     end
+
+    class Page
+      include Amiba::Source
+      metadata_fields :layout, :format, :title, :description, :category
+
+      VALID_FORMATS = %w{haml markdown}
+      validates_presence_of :layout, :format, :title, :description, :category
+      validates_inclusion_of :format, :in => VALID_FORMATS
+    end
+
+    class Post
+      include Amiba::Source
+      metadata_fields :format, :title, :status
+    end
+    
   end
 end

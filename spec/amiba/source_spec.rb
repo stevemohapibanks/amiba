@@ -13,7 +13,7 @@ describe Amiba::Source do
     @klass.send :metadata_fields, :layout, :format, :title, :description, :category
   end
 
-  describe "generating a source filename" do
+  describe "initialising a source instance" do
     before(:each) do
       @metadata = {
         layout: 'default', format: 'haml', title: 'Title',
@@ -71,4 +71,55 @@ describe Amiba::Source do
     end
   end
 
+  describe "saving an instance" do
+    before(:each) do
+      @page = @klass.new('new_page',
+                         {layout: 'default', format: 'haml', title: 'Title',
+                           description: 'Description', category: 'plain'},
+                         "Some content")
+    end
+    describe "when the source is valid" do
+      it "should save the source file" do
+        @page.save do | source_filename, data |
+          source_filename.should == @page.source_filename
+        end.should == true
+      end
+    end
+    describe "when the source is invalid" do
+      it "should not save" do
+        @page.should_receive(:valid?).and_return(false)
+        @page.save do | source_filename, data |
+          fail "Should not try and save"
+        end.should == false
+      end
+    end
+  end
+end
+
+describe Amiba::Source::Page do
+
+  describe "validating metadata" do
+    before(:each) do
+      @page = Amiba::Source::Page.new('new_page',
+                                      {layout: 'default', format: 'haml', title: 'Title',
+                                        description: 'Description', category: 'plain'},
+                                      "Some content")
+    end
+    [:title, :description, :layout, :format, :category].each do |field|
+      it "should have a #{field.to_s}" do
+        @page.send(:"#{field}=", nil)
+        @page.errors[:"#{field}"].should_not be_nil
+      end
+    end
+    %w{haml markdown}.each do |format|
+      it "should accept #{format} as a valid format" do
+        @page.format = format
+        @page.should be_valid
+      end
+    end
+    it "should reject an invalid format" do
+      @page.format = "invalid"
+      @page.errors[:format].should_not be_nil
+    end
+  end
 end
