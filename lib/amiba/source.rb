@@ -45,12 +45,16 @@ module Amiba
         self.content = content
       end
 
-      def source_filename
-        @source_filename ||= "#{self.class.pluralized_name}/#{name}"
+      def filename
+        @filename ||= "#{self.class.pluralized_name}/#{name}"
+      end
+
+      def staged_filename
+        File.join Amiba::STAGED_DIR, filename + ".#{format}"
       end
 
       def new?
-        !File.exist?(source_filename)
+        !File.exist?(filename)
       end
 
       def metadata_and_content
@@ -59,8 +63,12 @@ module Amiba
 
       def save(&block)
         return false unless valid?
-        yield source_filename, metadata_and_content
+        yield filename, metadata_and_content
         true
+      end
+
+      def content
+        @content
       end
 
       protected
@@ -81,17 +89,13 @@ module Amiba
         @metadata = HashWithIndifferentAccess.new(@metadata)
       end
 
-      def content
-        @content
-      end
-
       def content=(c)
         return @content unless @content.nil?
         @content = self.new? ? c : documents.last
       end
 
       def documents
-        @documents ||= YAML.load_stream(File.read(source_filename)).documents
+        @documents ||= YAML.load_stream(File.read(filename)).documents
       rescue
         nil
       end
@@ -111,12 +115,20 @@ module Amiba
       VALID_FORMATS = %w{haml markdown}
       validates_presence_of :layout, :format, :title, :description, :category
       validates_inclusion_of :format, :in => VALID_FORMATS
+
+      def output_filename
+        File.join(Amiba::SITE_DIR, "public/#{name}.html")
+      end
     end
 
     class Post
       include Amiba::Source
       metadata_fields :format, :title, :status
     end
-    
+
+    class Layout
+      include Amiba::Source
+      metadata_fields :format
+    end
   end
 end

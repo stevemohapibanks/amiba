@@ -26,7 +26,7 @@ module Amiba
 
     # Generate classes for each post type found under the Amiba project
     # posts directory
-    Dir.glob("#{Amiba::POSTS_DIR}/*").each do |post_dir|
+    Dir.glob("posts/*").each do |post_dir|
       klass_const = File.basename(post_dir).singularize.titleize
       klass = Class.new(Model) do
         class << self

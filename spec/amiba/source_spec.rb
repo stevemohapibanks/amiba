@@ -26,7 +26,7 @@ describe Amiba::Source do
         @page = @klass.new("home", @metadata, @content)
       end
       it "should generate pages/home as the source filename" do
-        @page.source_filename.should == 'pages/home'
+        @page.filename.should == 'pages/home'
       end
       it "should not exist" do
         @page.new?.should == true
@@ -45,7 +45,7 @@ describe Amiba::Source do
           @page = @klass.new('existing_page')
         end
         it "should generate pages/existing_page as the source filename" do
-          @page.source_filename.should == 'pages/existing_page'
+          @page.filename.should == 'pages/existing_page'
         end
         it "should not be new" do
           @page.new?.should == false
@@ -54,6 +54,9 @@ describe Amiba::Source do
           @page.layout.should == "custom"
           @page.format.should == "markdown"
           @page.title.should == "Title"
+        end
+        it "should have a staged filename" do
+          @page.staged_filename.should == 'staged/pages/existing_page.markdown'
         end
       end
 
@@ -80,15 +83,15 @@ describe Amiba::Source do
     end
     describe "when the source is valid" do
       it "should save the source file" do
-        @page.save do | source_filename, data |
-          source_filename.should == @page.source_filename
+        @page.save do | filename, data |
+          filename.should == @page.filename
         end.should == true
       end
     end
     describe "when the source is invalid" do
       it "should not save" do
         @page.should_receive(:valid?).and_return(false)
-        @page.save do | source_filename, data |
+        @page.save do | filename, data |
           fail "Should not try and save"
         end.should == false
       end
@@ -121,5 +124,31 @@ describe Amiba::Source::Page do
       @page.format = "invalid"
       @page.errors[:format].should_not be_nil
     end
+    it "should have an output filename" do
+      @page.output_filename.should == 'site/new_page.html'
+    end
   end
+end
+
+describe Amiba::Source::Layout do
+  describe "validating metadata" do
+    before(:each) do
+      @layout = Amiba::Source::Layout.new('new_layout', {format: 'haml'})
+    end
+    it "should have a format" do
+      @layout.format = nil
+      @layout.errors[:layout].should_not be_nil
+    end
+    %w{haml markdown}.each do |format|
+      it "should accept #{format} as a valid format" do
+        @layout.format = format
+        @layout.should be_valid
+      end
+    end
+    it "should reject an invalid format" do
+      @layout.format = "invalid"
+      @layout.errors[:format].should_not be_nil
+    end
+  end
+  
 end

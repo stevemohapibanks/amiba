@@ -35,8 +35,8 @@ module Amiba
       end
 
       def save_page
-        @source.save do |source_filename, file_data|
-          create_file source_filename, file_data
+        @source.save do |filename, file_data|
+          create_file filename, file_data
         end
       end
     end
@@ -54,9 +54,9 @@ module Amiba
       end
 
       def page
-        if ask("Are you sure you want to delete #{@source.source_filename}?" +
+        if ask("Are you sure you want to delete #{@source.filename}?" +
                " This is irreversible (y/n): ")
-          remove_file(@source.source_filename)
+          remove_file(@source.filename)
         end
       end
       
@@ -68,24 +68,28 @@ module Amiba
       include Amiba::Generator
 
       namespace :"page:build"
-      argument :page
+      argument :name
       
-      def init_source
-        @source = Source.new(page)
+      def init_sources
+        @page_source = Amiba::Source::Page.new(name)
+        @layout_source = Amiba::Source::Layout.new(@page_source.layout)
       end
 
-      def stage
-        create_file(@source.staged_filename) do
-          @source.content
+      def stage_sources
+        create_file @page_source.staged_filename do
+          @page_source.content
+        end
+        create_file @layout_source.staged_filename do
+          @layout_source.content           
         end
       end
 
       def build
-        layout = Tilt.new(@source.layout_filename)
-        page = Tilt.new(@source.staged_filename)
+        layout = Tilt.new(@layout_source.staged_filename)
+        page = Tilt.new(@page_source.staged_filename)
         scope = Object.new
 
-        create_file(@source.output_filename) do
+        create_file(@page_source.output_filename) do
           layout.render(scope) do
             page.render(scope)
           end
