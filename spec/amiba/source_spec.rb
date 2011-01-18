@@ -125,8 +125,37 @@ describe Amiba::Source::Page do
       @page.errors[:format].should_not be_nil
     end
     it "should have an output filename" do
-      @page.output_filename.should == 'site/new_page.html'
+      @page.output_filename.should == 'site/public/new_page.html'
     end
+  end
+end
+
+describe Amiba::Source::Entry do
+  before(:each) do
+    @entry = Amiba::Source::Entry.new('new_post',
+                                    {format: 'haml', title: 'New post',
+                                     category: 'post'},
+                                    "Some content")
+  end
+  describe "validating metadata" do
+    [:format, :title, :category].each do |metadata_field|
+      it "should have a #{metadata_field.to_s}" do
+        @entry.send(:"#{metadata_field.to_s}=", nil)
+        @entry.valid?.should be_false
+        @entry.errors[metadata_field].should_not be_nil
+      end
+    end
+  end
+  it "should have a source filename" do
+    @entry.filename.should == 'entries/posts/new_post'
+  end
+  it "should have a staged filename" do
+    @entry.staged_filename.should == "staged/entries/posts/new_post.haml"
+  end
+  it "should have an output filename" do
+    @entry.output_filename.should == 'site/public/posts/new_post.html'
+    @entry.category = "entry"
+    @entry.output_filename.should == 'site/public/entries/new_post.html'
   end
 end
 

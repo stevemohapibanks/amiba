@@ -58,7 +58,7 @@ module Amiba
       end
 
       def metadata_and_content
-        YAML.dump(metadata) + YAML.dump(content)
+        YAML.dump(metadata.to_hash) + YAML.dump(content)
       end
 
       def save(&block)
@@ -121,9 +121,23 @@ module Amiba
       end
     end
 
-    class Post
+    class Entry
       include Amiba::Source
-      metadata_fields :format, :title, :status
+      metadata_fields :format, :title, :description, :category
+
+      validates_presence_of :format, :title, :category
+
+      def filename
+        File.join("entries", category.pluralize, name)
+      end
+
+      def staged_filename
+        File.join(Amiba::STAGED_DIR, filename + ".#{format.to_s}")
+      end
+
+      def output_filename
+        File.join(Amiba::SITE_DIR, 'public', category.pluralize, "#{name}.html")
+      end
     end
 
     class Layout

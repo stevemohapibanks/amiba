@@ -66,7 +66,7 @@ end
 
 if Amiba::Util.in_amiba_application?
   require 'amiba/page'
-  require 'amiba/post'
+  require 'amiba/entry'
   require 'amiba/site'
 end
 

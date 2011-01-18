@@ -11,11 +11,11 @@ module Amiba
 
       namespace :"page:create"
       argument :name
-      class_option :layout, :default => "default"
-      class_option :format, :default => "haml"
-      class_option :title, :required => true
-      class_option :description, :required => true
-      class_option :category, :default => "plain"
+      class_option :layout, default: "default"
+      class_option :format, default: "haml"
+      class_option :title, required: true
+      class_option :description, required: true
+      class_option :category, default: "plain"
 
       def init_source
         @source = Amiba::Source::Page.new(name, options, Templates.send(options[:format].to_sym))
