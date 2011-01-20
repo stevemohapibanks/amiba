@@ -1,7 +1,8 @@
 require 'amiba'
+require 'amiba/configuration'
 require 'amiba/source'
 require 'amiba/page'
-require 'amiba/post'
+require 'amiba/entry'
 
 RSpec.configure do |config|
   config.around do |example|

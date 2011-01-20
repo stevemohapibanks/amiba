@@ -50,7 +50,7 @@ module Amiba
       end
 
       def staged_filename
-        File.join Amiba::STAGED_DIR, filename + ".#{format}"
+        File.join Amiba::Configuration.staged_dir, filename + ".#{format}"
       end
 
       def new?
@@ -117,7 +117,7 @@ module Amiba
       validates_inclusion_of :format, :in => VALID_FORMATS
 
       def output_filename
-        File.join(Amiba::SITE_DIR, "public/#{name}.html")
+        File.join(Amiba::Configuration.site_dir, "public/#{name}.html")
       end
     end
 
@@ -132,11 +132,11 @@ module Amiba
       end
 
       def staged_filename
-        File.join(Amiba::STAGED_DIR, filename + ".#{format.to_s}")
+        File.join(Amiba::Configuration.staged_dir, filename + ".#{format.to_s}")
       end
 
       def output_filename
-        File.join(Amiba::SITE_DIR, 'public', category.pluralize, "#{name}.html")
+        File.join(Amiba::Configuration.site_dir, 'public', category.pluralize, "#{name}.html")
       end
     end
 

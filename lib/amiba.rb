@@ -1,11 +1,9 @@
 require 'thor'
 require 'thor/group'
 require 'active_support/inflector'
+require 'amiba/configuration'
 
 module Amiba
-
-  STAGED_DIR = "staged"
-  SITE_DIR = "site"
 
   class Util
     def self.in_amiba_application?
