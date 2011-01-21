@@ -1,0 +1,9 @@
+--- 
+layout: default
+format: haml
+title: Simple Title
+description: Simple Description
+type: plain
+--- |
+%h1 Title
+%p Body

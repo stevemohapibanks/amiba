@@ -5,8 +5,5 @@ require 'thor/runner'
 require 'amiba'
 
 $thor_runner = true
-begin
-  Thor::Runner.start
-rescue
-  puts "Unknown command"
-end
+
+Thor::Runner.start

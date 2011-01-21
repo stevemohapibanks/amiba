@@ -30,26 +30,25 @@ module Amiba
       def copy_images
         directory "public/images", File.join(Amiba::Configuration.site_dir, "/public/images")
       end
-
+      
       def copy_css
         directory "public/css", File.join(Amiba::Configuration.site_dir, "/public/css")
       end
-
+      
       def process_and_copy_sass
         Dir.glob('public/css/*.scss').each do |scss_file|
-          create_file "site/css/#{File.basename(scss_file).gsub('scss', 'css')}"o
-            Tilt.new(scss_file).render
-          end
+          create_file "site/css/#{File.basename(scss_file).gsub('scss', 'css')}"
+          Tilt.new(scss_file).render
         end
       end
-
+    
       def build_pages
         Dir.glob('pages/*').each do |page_file|
           invoke(Amiba::Page::Build,
                  [File.basename(page_file).gsub(File.extname(page_file), '')])
         end
       end
-
+      
     end
   end
 end

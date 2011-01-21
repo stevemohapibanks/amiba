@@ -71,28 +71,19 @@ module Amiba
       argument :name
       
       def init_sources
-        @page_source = Amiba::Source::Page.new(name)
-        @layout_source = Amiba::Source::Layout.new(@page_source.layout)
+        puts "init_sources"
+        @page = Amiba::Source::Page.new(name)
+        @layout = Amiba::Source::Layout.new(@page.layout)
       end
 
       def stage_sources
-        create_file @page_source.staged_filename do
-          @page_source.content
-        end
-        create_file @layout_source.staged_filename do
-          @layout_source.content           
-        end
+        create_file(@page.staged_filename) do @page.content end
+        create_file(@layout.staged_filename) do @layout.content end
       end
 
       def build
-        layout = Tilt.new(@layout_source.staged_filename)
-        page = Tilt.new(@page_source.staged_filename)
-        scope = Object.new
-
-        create_file(@page_source.output_filename) do
-          layout.render(scope) do
-            page.render(scope)
-          end
+        create_file(@page.output_filename) do
+          Tilt.new(@layout.staged_filename).render(Amiba::Scope.new(@page))
         end
       end
 
