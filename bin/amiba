@@ -1,9 +1,8 @@
 #!/usr/bin/env ruby
 # -*- mode: ruby -*-
-
-require 'thor/runner'
-require 'amiba'
+require 'rubygems'
+require 'bundler/setup'
+Bundler.require(:default)
 
 $thor_runner = true
-
 Thor::Runner.start

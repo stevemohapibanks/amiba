@@ -1,6 +1,3 @@
-require 'thor'
-require 'thor/group'
-require 'active_support/inflector'
 require 'amiba/configuration'
 
 module Amiba
@@ -36,6 +33,10 @@ module Amiba
     
     argument :name
     class_option :default_page, :default => "home"
+
+    def create_gemfile
+      create_file 'Gemfile'
+    end
 
     def create_project_structure
       create_file File.join(name, ".amiba")

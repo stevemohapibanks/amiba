@@ -1,4 +1,3 @@
-require 'yaml'
 require 'amiba/source'
 
 module Amiba
@@ -88,7 +87,6 @@ module Amiba
       end
 
     end
-
 
     # Lists all pages currently managed by this Amiba project
     class List < Thor::Group

@@ -1,9 +1,3 @@
-require 'yaml'
-require 'thor'
-require 'active_support'
-require 'active_support/hash_with_indifferent_access'
-require 'active_model'
-
 module Amiba
   module Source
 
@@ -12,7 +6,6 @@ module Amiba
       base.send :extend, ClassMethods
       base.send :attr_reader, :name
       base.send :include, ActiveModel::Validations
-
     end
 
     module ClassMethods
@@ -121,28 +114,11 @@ module Amiba
       end
     end
 
-    class Entry
-      include Amiba::Source
-      metadata_fields :format, :title, :description, :category
-
-      validates_presence_of :format, :title, :category
-
-      def filename
-        File.join("entries", category.pluralize, name)
-      end
-
-      def staged_filename
-        File.join(Amiba::Configuration.staged_dir, filename + ".#{format.to_s}")
-      end
-
-      def output_filename
-        File.join(Amiba::Configuration.site_dir, 'public', category.pluralize, "#{name}.html")
-      end
-    end
-
     class Layout
       include Amiba::Source
       metadata_fields :format
     end
   end
 end
+
+require 'amiba/source/entry'

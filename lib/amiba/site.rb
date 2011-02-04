@@ -1,7 +1,3 @@
-require 'haml'
-require 'sass'
-require 'tilt'
-
 module Amiba
   module Site
 

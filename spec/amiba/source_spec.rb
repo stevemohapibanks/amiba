@@ -132,13 +132,13 @@ end
 
 describe Amiba::Source::Entry do
   before(:each) do
-    @entry = Amiba::Source::Entry.new('new_post',
-                                    {format: 'haml', title: 'New post',
-                                     category: 'post'},
-                                    "Some content")
+    @entry = Amiba::Source::Entry.new(:post,
+                                      'new_post',
+                                      Factory.attributes_for(:entry, format: 'haml'),
+                                      "some_content")
   end
   describe "validating metadata" do
-    [:format, :title, :category].each do |metadata_field|
+    [:format, :title].each do |metadata_field|
       it "should have a #{metadata_field.to_s}" do
         @entry.send(:"#{metadata_field.to_s}=", nil)
         @entry.valid?.should be_false

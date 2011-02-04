@@ -1,6 +1,3 @@
-require 'rdiscount'
-require 'tilt'
-
 module Amiba
   class Scope
 
