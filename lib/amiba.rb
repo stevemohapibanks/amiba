@@ -35,7 +35,7 @@ module Amiba
     class_option :default_page, :default => "home"
 
     def create_gemfile
-      create_file 'Gemfile'
+      copy_file 'Gemfile', File.join(name, 'Gemfile')
     end
 
     def create_project_structure

@@ -11,7 +11,10 @@ module Amiba
       class_option :format, default: 'markdown'
 
       def init_source
-        @source = Amiba::Source::Entry.new(name, options, "h1. New post\n")
+        @source = Amiba::Source::Entry.new(options[:category].to_sym,
+                                           name,
+                                           options,
+                                           "h1. New post\n")
       end
 
       def should_not_exist

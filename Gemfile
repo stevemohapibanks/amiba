@@ -1,12 +1,12 @@
 source "http://rubygems.org"
 
 gem "thor", "~>0.14.6", require: %w{thor thor/group thor/runner}
-gem "tilt", "~>1.1"
+gem "tilt", "~>1.2.1"
 gem "haml", "~>3.0.25"
-gem "activesupport", "~>3.0.3", require: 'active_support/all'
-gem "activemodel", "~>3.0.3", require: 'active_model'
-gem "i18n"
-gem "rdiscount"
+gem "activesupport", "~>3.0.4", require: 'active_support/all'
+gem "activemodel", "~>3.0.4", require: 'active_model'
+gem "i18n", "~> 0.5.0"
+gem "rdiscount", "~> 1.6.8"
 
 group :development do
   gem "rspec"

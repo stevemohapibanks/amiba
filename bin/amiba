@@ -1,8 +1,21 @@
 #!/usr/bin/env ruby
 # -*- mode: ruby -*-
 require 'rubygems'
-require 'bundler/setup'
-Bundler.require(:default)
+
+if File.exist?('Gemfile')
+  require 'bundler/setup'
+  Bundler.require(:default)
+else
+  require 'thor'
+  require 'thor/runner'
+  require 'tilt'
+  require 'haml'
+  require 'active_support'
+  require 'active_model'
+  require 'i18n'
+  require 'rdiscount'
+  require 'amiba'
+end
 
 $thor_runner = true
 Thor::Runner.start

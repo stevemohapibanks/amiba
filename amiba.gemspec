@@ -17,5 +17,13 @@ Gem::Specification.new do |s|
   s.files        = Dir.glob("{bin,lib,templates}/**/*") + Dir.glob("templates/**/.empty_directory") + %w{Thorfile Gemfile}
   s.executable   = 'amiba'
   s.require_path = 'lib'
+
+  s.add_dependency('thor',          '~> 0.14.6')
+  s.add_dependency('tilt',          '~> 1.2.1')
+  s.add_dependency('haml',          '~> 3.0.25')
+  s.add_dependency('activesupport', '~> 3.0.4')
+  s.add_dependency('activemodel',   '~> 3.0.4')
+  s.add_dependency('i18n',          '~> 0.5.0')
+  s.add_dependency('rdiscount',     '~> 1.6.8')
 end
 
