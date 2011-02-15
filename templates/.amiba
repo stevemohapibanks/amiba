@@ -1,0 +1,4 @@
+staged_dir: staged
+site_dir: site
+default_page_format: haml
+default_entry_format: markdown
