@@ -32,34 +32,47 @@ module Amiba
     namespace :create
     
     argument :name
+    class_option :path 
     class_option :default_page, :default => "home"
 
+    
     def create_gemfile
-      copy_file 'Gemfile', File.join(name, 'Gemfile')
+      copy_file File.join('templates', 'Gemfile'), File.join(target, 'Gemfile')
     end
 
     def create_project_structure
-      create_file File.join(name, ".amiba")
+      create_file File.join(target, ".amiba")
       %w{pages posts layouts}.each {|dirname|
-        directory File.join("templates", dirname), File.join(name, dirname)
+        directory File.join("templates", dirname), File.join(target, dirname)
       }
     end
 
     def create_assets_structure
       %w{public/js public/css public/images}.each do |dirname|
-        empty_directory File.join(name, dirname)
+        empty_directory File.join(target, dirname)
       end
     end
     
     def create_default_page
       require 'amiba/page'
-      inside(name, :verbose => true) do
+      inside(target, :verbose => true) do
         invoke(Amiba::Page::Create,
                [options[:default_page]],
                :title => name.titleize,
                :description => "#{name.titleize} Homepage. Please change this to be more descriptive")
       end   
     end
+
+    private
+
+      def target
+        if options[:path]
+          File.expand_path(File.join(options[:path], name))
+        else
+          name
+        end
+      end
+
   end
 end
 
