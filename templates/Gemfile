@@ -9,4 +9,3 @@ gem "i18n", "~> 0.5.0"
 gem "rdiscount", "~> 1.6.8"
 
 gem "amiba", "~> 0.0.1"
-
