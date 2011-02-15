@@ -8,3 +8,4 @@ gem "activemodel", "~>3.0.3", require: 'active_model'
 gem "i18n"
 gem "rdiscount"
 
+gem "amiba"
