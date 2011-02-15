@@ -72,7 +72,7 @@ module Amiba
       def init_sources
         puts "init_sources"
         @page = Amiba::Source::Page.new(name)
-        @layout = Amiba::Source::Layout.new(@page.layout)
+        @layout = Amiba::Source::Layout.new(@page.layout, {:format => @page.format} )
       end
 
       def stage_sources
