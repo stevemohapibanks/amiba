@@ -19,7 +19,7 @@ describe Amiba::Source::Entry do
         end
       end
       it "should have a source filename" do
-        @entry.filename.should == 'entries/posts/new_post'
+        @entry.filename.should == 'entries/posts/new_post.haml'
       end
       it "should have a staged filename" do
         @entry.staged_filename.should == "staged/entries/posts/new_post.haml"
