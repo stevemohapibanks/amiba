@@ -6,7 +6,7 @@ module Amiba
         def all(*args)
           category = extract_category!(args)
           
-          all_entry_pairs.map { |cat, name| Amiba::Source::Entry.new(cat, name) }
+          all_entries.map { |cat, name| Amiba::Source::Entry.new(cat, name) }
             .select {|entry| category == nil || entry.category == category.to_s}
         end
 
@@ -16,7 +16,7 @@ module Amiba
           args.shift if args.first.is_a?(Symbol)
         end
 
-        def all_entry_pairs
+        def all_entries
           all_entry_files.map do |name|
             name =~ /.*\/(.*)\/(.*)/ ? [$1.singularize.to_sym, $2] : nil
           end.compact

@@ -51,5 +51,4 @@ describe Amiba::Source::Entry do
       end
     end
   end
-  
 end
