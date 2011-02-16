@@ -35,6 +35,9 @@ module Amiba
     class_option :path 
     class_option :default_page, :default => "home"
 
+    def init_git
+      @repo = Grit::Repo.init(target)
+    end
     
     def create_gemfile
       copy_file File.join('templates', 'Gemfile'), File.join(target, 'Gemfile')
@@ -61,6 +64,13 @@ module Amiba
                :title => name.titleize,
                :description => "#{name.titleize} Homepage. Please change this to be more descriptive")
       end   
+    end
+
+    def commit_to_git
+      Dir.chdir(@repo.working_dir) do
+        @repo.add %w{.amiba Gemfile layouts pages}
+        @repo.commit_all("Initial commit of #{name} project.")
+      end
     end
 
     private
