@@ -12,6 +12,7 @@ describe Amiba::Source::EntryCache do
                                            Factory.attributes_for(:entry, format: 'markdown'),
                                            "Content")
           entry.save do |filename, file_data|
+            FileUtils.mkdir_p File.dirname filename
             File.open(filename, 'w') {|f| f.write(file_data)}
           end
           @entries << entry
