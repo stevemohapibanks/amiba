@@ -63,7 +63,7 @@ describe Amiba::Source do
       describe "with new metadata" do
         before(:each) do
           @metadata = {title: 'New title', description: 'New description'}
-          @page = @klass.new('existing_page', @metadata)
+          @page = @klass.new('existing_page', 'markdown', @metadata)
         end
         it 'should merge the metadata, with new metadata taking priority' do
           @page.layout.should == 'custom'
