@@ -25,8 +25,8 @@ describe Amiba::Source do
       before(:each) do
         @page = @klass.new("home", "haml", @metadata, @content)
       end
-      it "should generate pages/home as the source filename" do
-        @page.filename.should == 'pages/home'
+      it "should generate pages/home.haml as the source filename" do
+        @page.filename.should == 'pages/home.haml'
       end
       it "should not exist" do
         @page.new?.should == true
