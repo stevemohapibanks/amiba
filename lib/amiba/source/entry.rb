@@ -16,11 +16,11 @@ module Amiba
       end
 
       def filename
-        File.join("entries", category.to_s.downcase.pluralize, name)
+        File.join("entries", category.to_s.downcase.pluralize, name + ".#{format.to_s}")
       end
       
       def staged_filename
-        File.join(Amiba::Configuration.staged_dir, filename + ".#{format.to_s}")
+        File.join(Amiba::Configuration.staged_dir, filename)
       end
 
       def output_filename

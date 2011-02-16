@@ -17,7 +17,7 @@ module Amiba
       class_option :category, default: "plain"
 
       def init_source
-        @source = Amiba::Source::Page.new(name, options, Templates.send(options[:format].to_sym))
+        @source = Amiba::Source::Page.new(name, options[:format], options, Templates.send(options[:format].to_sym))
       end
 
       def should_not_exist
@@ -68,11 +68,12 @@ module Amiba
 
       namespace :"page:build"
       argument :name
+      argument :format
       
       def init_sources
         puts "init_sources"
-        @page = Amiba::Source::Page.new(name)
-        @layout = Amiba::Source::Layout.new(@page.layout)
+        @page = Amiba::Source::Page.new(name, format)
+        @layout = Amiba::Source::Layout.new(@page.layout, @page.format)
       end
 
       def stage_sources

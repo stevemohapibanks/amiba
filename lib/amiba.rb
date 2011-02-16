@@ -41,7 +41,7 @@ module Amiba
     end
 
     def create_project_structure
-      create_file File.join(target, ".amiba")
+      copy_file File.join('templates', '.amiba'), File.join(target, ".amiba")
       %w{pages posts layouts}.each {|dirname|
         directory File.join("templates", dirname), File.join(target, dirname)
       }

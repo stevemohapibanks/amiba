@@ -40,8 +40,9 @@ module Amiba
     
       def build_pages
         Dir.glob('pages/*').each do |page_file|
+          ext = File.extname page_file
           invoke(Amiba::Page::Build,
-                 [File.basename(page_file).gsub(File.extname(page_file), '')])
+                 [File.basename(page_file, ext), ext.sub(/^./,"")])
         end
       end
       
