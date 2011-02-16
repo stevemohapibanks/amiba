@@ -76,8 +76,8 @@ describe Amiba::Source do
 
   describe "saving an instance" do
     before(:each) do
-      @page = @klass.new('new_page',
-                         {layout: 'default', format: 'haml', title: 'Title',
+      @page = @klass.new('new_page', 'haml',
+                         {layout: 'default', title: 'Title',
                            description: 'Description', category: 'plain'},
                          "Some content")
     end
@@ -103,8 +103,8 @@ describe Amiba::Source::Page do
 
   describe "validating metadata" do
     before(:each) do
-      @page = Amiba::Source::Page.new('new_page',
-                                      {layout: 'default', format: 'haml', title: 'Title',
+      @page = Amiba::Source::Page.new('new_page', 'haml',
+                                      {layout: 'default', title: 'Title',
                                         description: 'Description', category: 'plain'},
                                       "Some content")
     end
@@ -147,7 +147,7 @@ describe Amiba::Source::Entry do
     end
   end
   it "should have a source filename" do
-    @entry.filename.should == 'entries/posts/new_post'
+    @entry.filename.should == 'entries/posts/new_post.haml'
   end
   it "should have a staged filename" do
     @entry.staged_filename.should == "staged/entries/posts/new_post.haml"
