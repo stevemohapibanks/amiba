@@ -42,10 +42,10 @@ describe Amiba::Source do
     describe "when a source file exists" do
       describe "with no new metadata" do
         before(:each) do
-          @page = @klass.new('existing_page')
+          @page = @klass.new('existing_page', 'markdown')
         end
-        it "should generate pages/existing_page as the source filename" do
-          @page.filename.should == 'pages/existing_page'
+        it "should generate pages/existing_page.markdown as the source filename" do
+          @page.filename.should == 'pages/existing_page.markdown'
         end
         it "should not be new" do
           @page.new?.should == false
