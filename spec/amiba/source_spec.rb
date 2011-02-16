@@ -10,20 +10,20 @@ describe Amiba::Source do
       include Amiba::Source
       class_eval "def self.name; 'Amiba::Source::Page'; end"
     end
-    @klass.send :metadata_fields, :layout, :format, :title, :description, :category
+    @klass.send :metadata_fields, :layout, :title, :description, :category
   end
 
   describe "initialising a source instance" do
     before(:each) do
       @metadata = {
-        layout: 'default', format: 'haml', title: 'Title',
+        layout: 'default', title: 'Title',
         description: 'Description', category: 'plain'
       }
       @content = "h1. Title.\np. Body"
     end
     describe "when no source file exists" do
       before(:each) do
-        @page = @klass.new("home", @metadata, @content)
+        @page = @klass.new("home", "haml", @metadata, @content)
       end
       it "should generate pages/home as the source filename" do
         @page.filename.should == 'pages/home'
