@@ -6,7 +6,7 @@ module Amiba
         def all(*args)
           category = extract_category!(args)
           
-          all_entry_pairs.map { |cat, name| Amiba::Source::Entry.new(cat, name) }
+          all_entry_pairs.map { |cat, name| Amiba::Source::Entry.new(cat, name, File.extname(name).gsub(/^\./,"")) }
             .select {|entry| category == nil || entry.category == category.to_s}
         end
 

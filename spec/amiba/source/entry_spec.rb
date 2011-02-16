@@ -5,17 +5,15 @@ describe Amiba::Source::Entry do
   describe "creating an Entry" do
     describe "that doesn't already exist" do
       before(:each) do
-        @entry = Amiba::Source::Entry.new(:post, 'new_post',
-                                          Factory.attributes_for(:entry, format: 'haml'),
+        @entry = Amiba::Source::Entry.new(:post, 'new_post', 'haml',
+                                          Factory.attributes_for(:entry),
                                           "Some content")
       end
       describe "validating metadata" do
-        [:format, :title].each do |metadata_field|
-          it "should have a #{metadata_field.to_s}" do
-            @entry.send(:"#{metadata_field.to_s}=", nil)
-            @entry.valid?.should be_false
-            @entry.errors[metadata_field].should_not be_nil
-          end
+        it "should have a title" do
+          @entry.title = nil
+          @entry.valid?.should be_false
+          @entry.errors[:title].should_not be_nil
         end
       end
       it "should have a source filename" do
@@ -35,7 +33,8 @@ describe Amiba::Source::Entry do
       before(:each) do
         @entry = Amiba::Source::Entry.new(:post,
                                           Factory.next(:entry_name),
-                                          Factory.attributes_for(:entry, format: 'markdown'),
+                                          'markdown',
+                                          Factory.attributes_for(:entry),
                                           "Content")
         @entry.save do |filename, file_data|
           FileUtils.mkdir_p File.dirname filename
@@ -43,7 +42,7 @@ describe Amiba::Source::Entry do
         end
       end
       it "should create an Entry object" do
-        e = Amiba::Source::Entry.new(:post, @entry.name)
+        e = Amiba::Source::Entry.new(:post, @entry.name, @entry.format)
         e.should be_instance_of(Amiba::Source::Entry)
         e.title.should == "Title"
       end

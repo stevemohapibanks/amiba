@@ -9,7 +9,8 @@ describe Amiba::Source::EntryCache do
         3.times do
           entry = Amiba::Source::Entry.new(entry_category,
                                            Factory.next(:entry_name),
-                                           Factory.attributes_for(:entry, format: 'markdown'),
+                                           'markdown',
+                                           Factory.attributes_for(:entry),
                                            "Content")
           entry.save do |filename, file_data|
             FileUtils.mkdir_p File.dirname filename

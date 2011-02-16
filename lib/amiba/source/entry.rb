@@ -3,14 +3,15 @@ module Amiba
     class Entry
       include Amiba::Source
       attr_accessor :category
-      metadata_fields :format, :title, :description
+      metadata_fields :title, :description
 
-      validates_presence_of :format, :title
+      validates_presence_of :title
 
 
-      def initialize(category, name, metadata = nil, content = nil)
+      def initialize(category, name, format, metadata = nil, content = nil)
         self.category = category
         self.name = name
+        self.format = format
         self.metadata = metadata
         self.content = content
       end
