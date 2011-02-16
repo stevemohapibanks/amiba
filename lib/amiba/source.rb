@@ -32,18 +32,21 @@ module Amiba
 
     module InstanceMethods
 
-      def initialize(name, metadata = nil, content = nil)
+      attr_accessor :format
+
+      def initialize(name, format='haml', metadata = nil, content = nil)
         self.name = name
+        self.format = format
         self.metadata = metadata
         self.content = content
       end
 
       def filename
-        @filename ||= "#{self.class.pluralized_name}/#{name}"
+        @filename ||= File.join(self.class.pluralized_name, "#{name}.#{format}")
       end
 
       def staged_filename
-        File.join Amiba::Configuration.staged_dir, filename + ".#{format}"
+        File.join Amiba::Configuration.staged_dir, filename
       end
 
       def new?
@@ -103,11 +106,10 @@ module Amiba
 
     class Page
       include Amiba::Source
-      metadata_fields :layout, :format, :title, :description, :category
+      metadata_fields :layout, :title, :description, :category
 
       VALID_FORMATS = %w{haml markdown}
-      validates_presence_of :layout, :format, :title, :description, :category
-      validates_inclusion_of :format, :in => VALID_FORMATS
+      validates_presence_of :layout, :title, :description, :category
 
       def output_filename
         File.join(Amiba::Configuration.site_dir, "public/#{name}.html")
@@ -116,7 +118,10 @@ module Amiba
 
     class Layout
       include Amiba::Source
-      metadata_fields :format
+
+      def content=(c)
+        @content ||= self.new? ? c : File.read(filename)
+      end
     end
   end
 end

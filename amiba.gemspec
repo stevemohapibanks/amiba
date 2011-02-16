@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
  
   s.required_rubygems_version = ">= 1.3.6"
  
-  s.files        = Dir.glob("{bin,lib,templates}/**/*") + Dir.glob("templates/**/.empty_directory") + %w{Thorfile Gemfile}
+  s.files        = Dir.glob("{bin,lib,templates}/**/*") + Dir.glob("templates/**/.empty_directory") + %w{Thorfile Gemfile templates/.amiba}
   s.executable   = 'amiba'
   s.require_path = 'lib'
 
