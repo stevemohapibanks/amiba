@@ -40,7 +40,7 @@ module Amiba
     end
     
     def create_gemfile
-      copy_file File.join('templates', 'Gemfile'), File.join(target, 'Gemfile')
+      copy_file 'Gemfile', File.join(target, 'Gemfile')
     end
 
     def create_project_structure

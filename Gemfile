@@ -15,3 +15,7 @@ group :development do
   gem "autotest"
   gem "factory_girl", ">=2.0.0.beta1"
 end
+
+group :production do
+  gem "amiba"
+end
