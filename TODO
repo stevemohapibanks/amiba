@@ -1,9 +1,4 @@
-Create posts source
-Validate post source metadata
-Add configuration/defaults to .amiba file
 Implement a entry cache to find posts
-Build scope object for template rendering
-Add create entry task
 Add build entry task
 Add delete entry task
 Add link generator to scope object
