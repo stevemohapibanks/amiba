@@ -10,15 +10,15 @@ module Amiba
 
       namespace :"page:create"
       argument :name
+      argument :format, default: "haml"
       class_option :layout, default: "default"
-      class_option :format, default: "haml"
       class_option :title, required: true
       class_option :description, required: true
       class_option :category, default: "plain"
       class_option :state, default: "draft"
 
       def init_source
-        @source = Amiba::Source::Page.new(name, options[:format], options, Templates.send(options[:format].to_sym))
+        @source = Amiba::Source::Page.new(name, format, options, Templates.send(format.to_sym))
       end
 
       def should_not_exist
@@ -48,9 +48,10 @@ module Amiba
 
       namespace :"page:destroy"
       argument :name
+      argument :format, default: 'haml'
 
       def init_source
-        @source = Amiba::Source::Page.new(name)
+        @source = Amiba::Source::Page.new(name, format)
       end
 
       def page
@@ -69,7 +70,7 @@ module Amiba
 
       namespace :"page:build"
       argument :name
-      argument :format
+      argument :format, default: 'haml'
       
       def init_sources
         puts "init_sources"
