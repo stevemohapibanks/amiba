@@ -15,6 +15,7 @@ module Amiba
       class_option :title, required: true
       class_option :description, required: true
       class_option :category, default: "plain"
+      class_option :state, default: "draft"
 
       def init_source
         @source = Amiba::Source::Page.new(name, options[:format], options, Templates.send(options[:format].to_sym))
