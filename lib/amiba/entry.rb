@@ -5,14 +5,15 @@ module Amiba
       include Amiba::Generator
 
       namespace :"entry:create"
+      argument :format, default: 'markdown'
       class_option :category, required: true
       class_option :title, required: true
       class_option :description
-      class_option :format, default: 'markdown'
 
       def init_source
         @source = Amiba::Source::Entry.new(options[:category].to_sym,
                                            name,
+                                           format,
                                            options,
                                            "h1. New post\n")
       end
