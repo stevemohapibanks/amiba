@@ -3,11 +3,13 @@ module Amiba
 
     class Create < Thor::Group
       include Amiba::Generator
+      include Amiba::Repo
 
       namespace :"entry:create"
       argument :format, default: 'markdown'
       class_option :category, required: true
       class_option :title, required: true
+      class_option :state, default: 'draft'
       class_option :description
 
       def init_source
@@ -34,6 +36,10 @@ module Amiba
         @source.save do |filename, file_data|
           create_file filename, file_data
         end
+      end
+
+      def add_to_git
+        add_and_commit @source.filename
       end
 
       protected

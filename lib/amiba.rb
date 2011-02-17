@@ -1,4 +1,5 @@
 require 'amiba/configuration'
+require 'amiba/repo'
 
 module Amiba
 

@@ -21,6 +21,13 @@ module Amiba
             name =~ /.*\/(.*)\/(.*)/ ? [$1.singularize.to_sym, $2] : nil
           end.compact
         end
+
+        def sorted_entries
+          repo = Grit::Repo.new('.')
+          all_entry_files.sort do |a,b|
+            repo.log(b).first.committed_date <=> repo.log(a).first.committed_date
+          end
+        end
         
         def all_entry_files
           Dir.glob('entries/*/*')
