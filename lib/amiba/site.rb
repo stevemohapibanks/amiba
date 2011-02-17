@@ -48,6 +48,7 @@ module Amiba
       private
       def build_page(name, format)
         @page = Amiba::Source::Page.new(name, format)
+        return unless @page.state == "published"
         @layout = Amiba::Source::Layout.new(@page.layout, @page.format)
         create_file(@page.staged_filename) do @page.content end
         create_file(@layout.staged_filename) do @layout.content end
