@@ -97,34 +97,6 @@ module Amiba
       
     end
 
-
-    # Stages and builds a page from the template in to a static file.
-    class Build < Thor::Group
-      include Amiba::Generator
-
-      namespace :"page:build"
-      argument :name
-      argument :format, default: 'haml'
-      
-      def init_sources
-        puts "init_sources"
-        @page = Amiba::Source::Page.new(name, format)
-        @layout = Amiba::Source::Layout.new(@page.layout, @page.format)
-      end
-
-      def stage_sources
-        create_file(@page.staged_filename) do @page.content end
-        create_file(@layout.staged_filename) do @layout.content end
-      end
-
-      def build
-        create_file(@page.output_filename) do
-          Tilt.new(@layout.staged_filename).render(Amiba::Scope.new(@page))
-        end
-      end
-
-    end
-
     # Lists all pages currently managed by this Amiba project
     class List < Thor::Group
       include Amiba::Generator
