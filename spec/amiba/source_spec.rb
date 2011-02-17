@@ -10,14 +10,14 @@ describe Amiba::Source do
       include Amiba::Source
       class_eval "def self.name; 'Amiba::Source::Page'; end"
     end
-    @klass.send :metadata_fields, :layout, :title, :description, :category
+    @klass.send :metadata_fields, :layout, :title, :description, :category, :state
   end
 
   describe "initialising a source instance" do
     before(:each) do
       @metadata = {
         layout: 'default', title: 'Title',
-        description: 'Description', category: 'plain'
+        description: 'Description', category: 'plain', state: 'draft'
       }
       @content = "h1. Title.\np. Body"
     end
@@ -37,6 +37,7 @@ describe Amiba::Source do
         @page.title.should == 'Title'
         @page.description.should == 'Description'
         @page.category.should == 'plain'
+        @page.state.should == 'draft'
       end
     end
     describe "when a source file exists" do
@@ -105,10 +106,10 @@ describe Amiba::Source::Page do
     before(:each) do
       @page = Amiba::Source::Page.new('new_page', 'haml',
                                       {layout: 'default', title: 'Title',
-                                        description: 'Description', category: 'plain'},
+                                        description: 'Description', category: 'plain', state: 'draft'},
                                       "Some content")
     end
-    [:title, :description, :layout, :format, :category].each do |field|
+    [:title, :description, :layout, :format, :category, :state].each do |field|
       it "should have a #{field.to_s}" do
         @page.send(:"#{field}=", nil)
         @page.errors[:"#{field}"].should_not be_nil

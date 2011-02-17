@@ -10,14 +10,15 @@ module Amiba
 
       namespace :"page:create"
       argument :name
+      argument :format, default: "haml"
       class_option :layout, default: "default"
-      class_option :format, default: "haml"
       class_option :title, required: true
       class_option :description, required: true
       class_option :category, default: "plain"
+      class_option :state, default: "draft"
 
       def init_source
-        @source = Amiba::Source::Page.new(name, options[:format], options, Templates.send(options[:format].to_sym))
+        @source = Amiba::Source::Page.new(name, format, options, Templates.send(format.to_sym))
       end
 
       def should_not_exist
@@ -41,15 +42,50 @@ module Amiba
     end
 
     
+    # Thor task to mark a page published.
+    class Publish < Thor::Group
+      include Amiba::Generator
+
+      namespace :"page:publish"
+      argument :name
+      argument :format, default: 'haml'
+
+      def init_source
+        @source = Amiba::Source::Page.new(name, format)
+      end
+
+      def should_exist
+        if @source.new?
+          raise Thor::Error.new("Error: Can't publish a page that doesn't exist.")
+        end
+      end
+
+      def should_not_be_published
+        if @source.state == "published"
+          raise Thor::Error.new("Page already published")
+        end
+      end
+
+      def save_page
+        @source.state = "published"
+        @source.save do |filename, file_data|
+          remove_file filename
+          create_file filename, file_data
+        end
+      end
+
+    end
+
     # Thor task to destroy a page. It will delete all files matching the page name
     class Destroy < Thor::Group
       include Amiba::Generator
 
       namespace :"page:destroy"
       argument :name
+      argument :format, default: 'haml'
 
       def init_source
-        @source = Amiba::Source::Page.new(name)
+        @source = Amiba::Source::Page.new(name, format)
       end
 
       def page
@@ -68,7 +104,7 @@ module Amiba
 
       namespace :"page:build"
       argument :name
-      argument :format
+      argument :format, default: 'haml'
       
       def init_sources
         puts "init_sources"

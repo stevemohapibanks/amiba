@@ -106,10 +106,10 @@ module Amiba
 
     class Page
       include Amiba::Source
-      metadata_fields :layout, :title, :description, :category
+      metadata_fields :layout, :title, :description, :category, :state
 
       VALID_FORMATS = %w{haml markdown}
-      validates_presence_of :layout, :title, :description, :category
+      validates_presence_of :layout, :title, :description, :category, :state
 
       def output_filename
         File.join(Amiba::Configuration.site_dir, "public/#{name}.html")
