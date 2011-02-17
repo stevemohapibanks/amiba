@@ -42,6 +42,40 @@ module Amiba
     end
 
     
+    # Thor task to mark a page published.
+    class Publish < Thor::Group
+      include Amiba::Generator
+
+      namespace :"page:publish"
+      argument :name
+      argument :format, default: 'haml'
+
+      def init_source
+        @source = Amiba::Source::Page.new(name, format)
+      end
+
+      def should_exist
+        if @source.new?
+          raise Thor::Error.new("Error: Can't publish a page that doesn't exist.")
+        end
+      end
+
+      def should_not_be_published
+        if @source.state == "published"
+          raise Thor::Error.new("Page already published")
+        end
+      end
+
+      def save_page
+        @source.state = "published"
+        @source.save do |filename, file_data|
+          remove_file filename
+          create_file filename, file_data
+        end
+      end
+
+    end
+
     # Thor task to destroy a page. It will delete all files matching the page name
     class Destroy < Thor::Group
       include Amiba::Generator
