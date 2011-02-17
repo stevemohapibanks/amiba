@@ -1,6 +1,3 @@
-require 'amiba/configuration'
-require 'amiba/repo'
-
 module Amiba
 
   class Util
@@ -87,10 +84,4 @@ module Amiba
   end
 end
 
-if Amiba::Util.in_amiba_application?
-  require 'amiba/scope'
-  require 'amiba/page'
-  require 'amiba/entry'
-  require 'amiba/site'
-end
 

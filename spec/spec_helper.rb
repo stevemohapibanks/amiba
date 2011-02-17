@@ -4,12 +4,7 @@ require 'bundler/setup'
 Bundler.require(:default, :development)
 
 require 'amiba'
-require 'amiba/configuration'
-require 'amiba/scope'
-require 'amiba/source'
-require 'amiba/page'
-require 'amiba/entry'
-
+require 'amiba/all'
 require 'factories'
 
 RSpec.configure do |config|
