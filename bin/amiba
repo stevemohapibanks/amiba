@@ -9,5 +9,9 @@ end
 require 'bundler/setup'
 Bundler.require(:default, :production)
 
+if Amiba::Util.in_amiba_application?
+  Bundler.require(:production_extended)
+end
+
 $thor_runner = true
 Thor::Runner.start

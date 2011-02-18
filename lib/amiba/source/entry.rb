@@ -1,12 +1,13 @@
 module Amiba
   module Source
     class Entry
+      extend Amiba::Source::EntryFinder
       include Amiba::Source
+      
       attr_accessor :category
       metadata_fields :title, :description, :state
 
       validates_presence_of :title, :state
-
 
       def initialize(category, name, format, metadata = nil, content = nil)
         self.category = category

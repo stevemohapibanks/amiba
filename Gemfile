@@ -3,7 +3,7 @@ source "http://rubygems.org"
 gem "thor", "~>0.14.6", require: %w{thor thor/group thor/runner}
 gem "tilt", "~>1.2.1"
 gem "haml", "~>3.0.25"
-gem "activesupport", "~>3.0.3", require: 'active_support/all'
+gem "activesupport", "~>3.0.4", require: 'active_support/all'
 gem "activemodel", "~>3.0.3", require: 'active_model'
 gem "i18n", "~> 0.5.0"
 gem "rdiscount", "~> 1.6.8"
@@ -17,5 +17,8 @@ group :development do
 end
 
 group :production do
-  gem "amiba"
+  gem "amiba", require: %w{amiba amiba/configuration amiba/repo}
+end
+group :production_extended do
+  gem "amiba", require: %w{amiba amiba/all}
 end

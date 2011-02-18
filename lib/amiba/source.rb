@@ -125,6 +125,3 @@ module Amiba
     end
   end
 end
-
-require 'amiba/source/entry'
-require 'amiba/source/entry_cache'
