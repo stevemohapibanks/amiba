@@ -22,7 +22,7 @@ module Amiba
 
       def should_not_exist
         unless @source.new?
-          raise Thor::Error.new("Error: An entry called '#{name} already exists.")
+          raise Thor::Error.new("Error: An entry called '#{name}' already exists.")
         end
       end
 
@@ -50,6 +50,43 @@ module Amiba
         end
       end
     end
+
+    # Thor task to mark an entry published.
+    class Publish < Thor::Group
+      include Amiba::Generator
+
+      namespace :"entry:publish"
+      argument :name
+      argument :format, default: 'markdown'
+      class_option :category, required: true
+
+      def init_source
+        @source = Amiba::Source::Entry.new(options[:category].to_sym, name, format)
+      end
+
+      def should_exist
+        if @source.new?
+          raise Thor::Error.new("Error: Can't publish an entry that doesn't exist.")
+        end
+      end
+
+      def should_not_be_published
+        if @source.state == "published"
+          raise Thor::Error.new("Entry already published")
+        end
+      end
+
+      def save_page
+        @source.state = "published"
+        @source.save do |filename, file_data|
+          remove_file filename, :verbose => false
+          create_file filename, file_data, :verbose => false
+          say_status :published, filename, :green
+        end
+      end
+
+    end
+
 
   end
 end
