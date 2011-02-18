@@ -41,7 +41,7 @@ module Amiba
       def build_pages
         Dir.glob('pages/*').each do |page_file|
           ext = File.extname page_file
-          build_page(File.basename(page_file, ext), ext.sub(/^./,""))
+          build_page(File.basename(page_file, ext), ext.sub(/^\./,""))
         end
       end
       
