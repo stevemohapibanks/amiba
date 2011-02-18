@@ -6,8 +6,18 @@ module Amiba
         category = extract_category!(args)
         
         all_entries.map do |cat, name|
-          Amiba::Source::Entry.new(cat, name, File.extname(name).gsub(/^\./,""))
+          ext = File.extname name
+          Amiba::Source::Entry.new(cat, File.basename(name, ext), ext.gsub(/^\./,""))
         end.select {|entry| category == nil || entry.category == category.to_s}
+      end
+
+      def published(*args)
+        category = extract_category!(args)
+
+        all_entries.map do |cat, name|
+          ext = File.extname name
+          Amiba::Source::Entry.new(cat, File.basename(name, ext), ext.gsub(/^\./,""))
+        end.select {|entry| (category == nil || entry.category == category.to_s) && entry.state == "published" }
       end
 
       protected
