@@ -16,9 +16,6 @@ group :development do
   gem "factory_girl", ">=2.0.0.beta1"
 end
 
-group :production do
-  gem "amiba", require: %w{amiba amiba/configuration amiba/repo}
-end
-group :production_extended do
-  gem "amiba", require: %w{amiba amiba/all}
+if ENV['AMIBA_BIN'] == 'true'
+  gem 'amiba', require: %w{amiba amiba/all}
 end
