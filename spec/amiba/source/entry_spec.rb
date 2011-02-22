@@ -52,7 +52,6 @@ describe Amiba::Source::Entry do
     end
   end
 
-
   describe "finding all entries" do
     before(:each) do
       @entries = []
@@ -88,7 +87,6 @@ describe Amiba::Source::Entry do
           end
         end
       end
-      
     end
   end
 end

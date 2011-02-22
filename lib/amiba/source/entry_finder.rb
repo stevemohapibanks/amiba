@@ -1,46 +1,31 @@
 module Amiba
   module Source
     module EntryFinder
+      include Amiba::Repo
 
-      def all(*args)
-        category = extract_category!(args)
+      def all(category = :all, options = {})
+        state = options[:state] || "published"
         
         all_entries.map do |cat, name|
           ext = File.extname name
           Amiba::Source::Entry.new(cat, File.basename(name, ext), ext.gsub(/^\./,""))
-        end.select {|entry| category == nil || entry.category == category.to_s}
-      end
-
-      def published(*args)
-        category = extract_category!(args)
-
-        all_entries.map do |cat, name|
-          ext = File.extname name
-          Amiba::Source::Entry.new(cat, File.basename(name, ext), ext.gsub(/^\./,""))
-        end.select {|entry| (category == nil || entry.category == category.to_s) && entry.state == "published" }
+        end.select {|entry|
+          category == :all || entry.category == category && entry.state == state
+        }
       end
 
       protected
       
-      def extract_category!(args)
-        args.shift if args.first.is_a?(Symbol)
-      end
-
       def all_entries
-        all_entry_files.map do |name|
+        sorted_entries.map do |name|
           name =~ /.*\/(.*)\/(.*)/ ? [$1.singularize.to_sym, $2] : nil
         end.compact
       end
 
       def sorted_entries
-        repo = Grit::Repo.new('.')
-        all_entry_files.sort do |a,b|
-          repo.log(b).first.committed_date <=> repo.log(a).first.committed_date
+        Dir.glob('entries/*/*').sort do |a,b|
+          last_commit_date(a) <=> last_commit_date(b)
         end
-      end
-      
-      def all_entry_files
-        Dir.glob('entries/*/*')
       end
     end
   end
