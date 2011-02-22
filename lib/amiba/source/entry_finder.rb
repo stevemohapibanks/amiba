@@ -3,14 +3,16 @@ module Amiba
     module EntryFinder
       include Amiba::Repo
 
-      def all(category = :all, options = {})
-        state = options[:state] || "published"
-        
-        all_entries.map do |cat, name|
+      def all(args={})
+        category = args[:category]
+        published = args[:published] || true
+
+        all_entries.map { |cat, name|
           ext = File.extname name
           Amiba::Source::Entry.new(cat, File.basename(name, ext), ext.gsub(/^\./,""))
-        end.select {|entry|
-          category == :all || entry.category == category && entry.state == state
+        }.select {|entry|
+          (category == nil || entry.category == category.singularize) &&
+          (entry.state == "published" if published )
         }
       end
 

@@ -1,3 +1,4 @@
+require 'amiba/core_ext/symbol'
 require 'amiba/configuration'
 require 'amiba/repo'
 require 'amiba/scope'
