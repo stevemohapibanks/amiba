@@ -82,7 +82,7 @@ describe Amiba::Source::Entry do
     describe "with an entry category specified" do
       [:post, :job].each do |category|
         it "should find 3 #{category.to_s} entries" do
-          Amiba::Source::Entry.all(category).each do |e|
+          Amiba::Source::Entry.all({:category => category}).each do |e|
             e.should be_instance_of(Amiba::Source::Entry)
             e.category.should == category
           end

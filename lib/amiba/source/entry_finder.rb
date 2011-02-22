@@ -2,22 +2,14 @@ module Amiba
   module Source
     module EntryFinder
 
-      def all(*args)
-        category = extract_category!(args)
-        
-        all_entries.map do |cat, name|
-          ext = File.extname name
-          Amiba::Source::Entry.new(cat, File.basename(name, ext), ext.gsub(/^\./,""))
-        end.select {|entry| category == nil || entry.category == category.singularize}
-      end
-
-      def published(*args)
-        category = extract_category!(args)
+      def all(args={})
+        category = args[:category]
+        published = args[:published] || true
 
         all_entries.map do |cat, name|
           ext = File.extname name
           Amiba::Source::Entry.new(cat, File.basename(name, ext), ext.gsub(/^\./,""))
-        end.select {|entry| (category == nil || entry.category == category.singularize) && entry.state == "published" }
+        end.select {|entry| (category == nil || entry.category == category.singularize) && (entry.state == "published" if published )}
       end
 
       protected
