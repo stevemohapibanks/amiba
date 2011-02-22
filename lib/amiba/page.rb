@@ -7,6 +7,7 @@ module Amiba
     # and that the user specified a valid format before progressing.
     class Create < Thor::Group
       include Amiba::Generator
+      include Amiba::Repo
 
       namespace :"page:create"
       argument :name
@@ -39,12 +40,17 @@ module Amiba
           create_file filename, file_data
         end
       end
+
+      def add_to_git
+        add_and_commit @source.filename
+      end
+
     end
 
-    
     # Thor task to mark a page published.
     class Publish < Thor::Group
       include Amiba::Generator
+      include Amiba::Repo
 
       namespace :"page:publish"
       argument :name
@@ -75,6 +81,10 @@ module Amiba
         end
       end
 
+      def add_to_git
+        add_and_commit @source.filename, "Published #{@source.filename}"
+      end
+
     end
 
     # Thor task to destroy a page. It will delete all files matching the page name
@@ -95,7 +105,7 @@ module Amiba
           remove_file(@source.filename)
         end
       end
-      
+
     end
 
     # Lists all pages currently managed by this Amiba project
