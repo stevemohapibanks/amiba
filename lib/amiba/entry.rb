@@ -54,6 +54,7 @@ module Amiba
     # Thor task to mark an entry published.
     class Publish < Thor::Group
       include Amiba::Generator
+      include Amiba::Repo
 
       namespace :"entry:publish"
       argument :name
@@ -83,6 +84,10 @@ module Amiba
           create_file filename, file_data, :verbose => false
           say_status :published, filename, :green
         end
+      end
+
+      def add_to_git
+        add_and_commit @source.filename, "Published #{@source.filename}"
       end
 
     end

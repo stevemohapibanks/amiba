@@ -11,9 +11,9 @@ module Amiba
       raise "No repo exists at #{Dir.pwd}"
     end
 
-    def add_and_commit(filename)
+    def add_and_commit(filename, msg=nil)
       repo.add(filename)
-      repo.commit_all("Added a new entry at #{filename}")
+      repo.commit_all(msg || "Added a new entry at #{filename}")
     end
 
     def last_commit_date(filename)
