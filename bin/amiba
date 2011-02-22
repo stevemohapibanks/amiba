@@ -6,12 +6,10 @@ if !File.exist?('Gemfile')
   ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile", __FILE__)
 end
 
+ENV["AMIBA_BIN"] = "true"
+
 require 'bundler/setup'
 Bundler.require(:default, :production)
-
-if Amiba::Util.in_amiba_application?
-  Bundler.require(:production_extended)
-end
 
 $thor_runner = true
 Thor::Runner.start
