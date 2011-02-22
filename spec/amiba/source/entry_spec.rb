@@ -57,17 +57,19 @@ describe Amiba::Source::Entry do
     before(:each) do
       @entries = []
       [:post, :job].each do |entry_category|
-        3.times do
-          entry = Amiba::Source::Entry.new(entry_category,
-                                           Factory.next(:entry_name),
-                                           'markdown',
-                                           Factory.attributes_for(:entry),
-                                           "Content")
-          entry.save do |filename, file_data|
-            FileUtils.mkdir_p File.dirname filename
-            File.open(filename, 'w') {|f| f.write(file_data)}
+        ["published", "draft"].each do |state|
+          3.times do
+            entry = Amiba::Source::Entry.new(entry_category,
+                                             Factory.next(:entry_name),
+                                             'markdown',
+                                             Factory.attributes_for(:entry, state: state),
+                                             "Content")
+            entry.save do |filename, file_data|
+              FileUtils.mkdir_p File.dirname filename
+              File.open(filename, 'w') {|f| f.write(file_data)}
+            end
+            @entries << entry
           end
-          @entries << entry
         end
       end
     end
@@ -77,6 +79,11 @@ describe Amiba::Source::Entry do
     describe "with no options" do
       it "should find 6 entries" do
         Amiba::Source::Entry.all.count.should == 6
+      end
+    end
+    describe "searching for entries in any state" do
+      it "should find 12 entries" do
+        Amiba::Source::Entry.all({:published => "any"}).count.should == 12
       end
     end
     describe "with an entry category specified" do

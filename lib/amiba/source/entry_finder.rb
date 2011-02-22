@@ -4,20 +4,16 @@ module Amiba
 
       def all(args={})
         category = args[:category]
-        published = args[:published] || true
+        state = args[:published] || "published"
 
         all_entries.map do |cat, name|
           ext = File.extname name
           Amiba::Source::Entry.new(cat, File.basename(name, ext), ext.gsub(/^\./,""))
-        end.select {|entry| (category == nil || entry.category == category.singularize) && (entry.state == "published" if published )}
+        end.select {|entry| (category == nil || entry.category == category.singularize) && (state == "any" || entry.state == state) }
       end
 
       protected
       
-      def extract_category!(args)
-        args.shift if args.first.is_a?(Symbol)
-      end
-
       def all_entries
         all_entry_files.map do |name|
           name =~ /.*\/(.*)\/(.*)/ ? [$1.singularize.to_sym, $2] : nil
