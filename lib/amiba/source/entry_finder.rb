@@ -4,7 +4,7 @@ module Amiba
 
       def all(args={})
         category = args[:category]
-        state = args[:published] || "published"
+        state = args[:state] || "published"
 
         all_entries.map do |cat, name|
           ext = File.extname name
