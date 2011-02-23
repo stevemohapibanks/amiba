@@ -19,6 +19,10 @@ module Amiba
       page_renderer.render(self)
     end
 
+    def entries(category=nil)
+      Amiba::Source::Entry.all(category: category)
+    end
+
     protected
 
     def page_renderer

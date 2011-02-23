@@ -5,14 +5,14 @@ module Amiba
 
       def all(args={})
         category = args[:category]
-        published = args[:published] || true
+        state = args[:state] || "published"
 
         all_entries.map { |cat, name|
           ext = File.extname name
           Amiba::Source::Entry.new(cat, File.basename(name, ext), ext.gsub(/^\./,""))
         }.select {|entry|
           (category == nil || entry.category == category.singularize) &&
-          (entry.state == "published" if published )
+          (state == "any" || entry.state == state)
         }
       end
 

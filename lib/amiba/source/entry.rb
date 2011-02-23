@@ -5,9 +5,9 @@ module Amiba
       include Amiba::Source
       
       attr_accessor :category
-      metadata_fields :title, :description, :state
+      metadata_fields :title, :slug, :state, :layout
 
-      validates_presence_of :title, :state
+      validates_presence_of :title, :state, :layout
 
       def initialize(category, name, format, metadata = nil, content = nil)
         self.category = category
@@ -23,6 +23,10 @@ module Amiba
       
       def staged_filename
         File.join(Amiba::Configuration.staged_dir, filename)
+      end
+
+      def link
+        URI.escape( ["", category.to_s.downcase.pluralize, "#{name}.html"].join("/") )
       end
 
       def output_filename
