@@ -27,6 +27,13 @@ describe Amiba::Source::Entry do
         @entry.category = "entry"
         @entry.output_filename.should == 'site/public/entries/new_post.html'
       end
+      it "should have a link" do
+        @entry.link.should == "/posts/new_post.html"
+      end
+      it "should correctly escape the link" do
+        @entry.category = "some entries"
+        @entry.link.should == "/some%20entries/new_post.html"
+      end
     end
 
     describe "that already exists" do
