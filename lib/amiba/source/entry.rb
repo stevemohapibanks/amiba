@@ -5,9 +5,9 @@ module Amiba
       include Amiba::Source
       
       attr_accessor :category
-      metadata_fields :title, :slug, :state
+      metadata_fields :title, :slug, :state, :layout
 
-      validates_presence_of :title, :state
+      validates_presence_of :title, :state, :layout
 
       def initialize(category, name, format, metadata = nil, content = nil)
         self.category = category
