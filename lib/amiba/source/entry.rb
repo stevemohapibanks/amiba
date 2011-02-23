@@ -5,7 +5,7 @@ module Amiba
       include Amiba::Source
       
       attr_accessor :category
-      metadata_fields :title, :description, :state
+      metadata_fields :title, :slug, :state
 
       validates_presence_of :title, :state
 
