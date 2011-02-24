@@ -41,6 +41,16 @@ describe Amiba::Source do
       end
     end
     describe "when a source file exists" do
+      before(:each) do
+        pg = @klass.new('existing_page',
+                        'markdown',
+                        {title: "Title", layout: 'custom'},
+                        "Content")
+        pg.save do |fn, fd|
+          Dir.mkdir(File.dirname(fn))
+          File.open(fn, 'w+') {|f| f.write(fd) }
+        end
+      end
       describe "with no new metadata" do
         before(:each) do
           @page = @klass.new('existing_page', 'markdown')

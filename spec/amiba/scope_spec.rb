@@ -4,7 +4,9 @@ require 'fileutils'
 describe Amiba::Scope do
 
   before(:each) do
-    @page = Amiba::Source::Page.new('simple_page')
+    @page = Amiba::Source::Page.new('simple_page',
+                                    'haml',
+                                    )
     @scope = Amiba::Scope.new(@page)
   end
 

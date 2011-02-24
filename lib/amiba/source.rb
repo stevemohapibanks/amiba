@@ -46,6 +46,7 @@ module Amiba
       end
 
       def staged_filename
+        puts Amiba::Configuration.staged_dir
         File.join Amiba::Configuration.staged_dir, filename
       end
 
@@ -74,15 +75,12 @@ module Amiba
       end
 
       def metadata
-        @metadata
+        @metadata ||= source_valid? ? documents.first : {}
       end
 
       def metadata=(meta)
-        return @metadata unless @metadata.nil?
-
-        @metadata = source_valid? ? documents.first : {}
-        @metadata = @metadata.merge(meta) if meta
-        @metadata = HashWithIndifferentAccess.new(@metadata)
+        m = metadata.merge(meta) if meta
+        @metadata = HashWithIndifferentAccess.new(m)
       end
 
       def content=(c)
