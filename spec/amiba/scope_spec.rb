@@ -6,7 +6,8 @@ describe Amiba::Scope do
   before(:each) do
     @page = Amiba::Source::Page.new('simple_page',
                                     'haml',
-                                    )
+                                    {title: "Simple Title", description: "Simple Description"},
+                                    "<h1>Title</h1>\n<p>Body</p>")
     @scope = Amiba::Scope.new(@page)
   end
 

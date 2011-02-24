@@ -37,6 +37,8 @@ describe Amiba::Source::Entry do
     end
 
     describe "that already exists" do
+      include Amiba::Repo
+      
       before(:each) do
         @entry = Amiba::Source::Entry.new(:post,
                                           Factory.next(:entry_name),
@@ -46,10 +48,12 @@ describe Amiba::Source::Entry do
         @entry.save do |filename, file_data|
           FileUtils.mkdir_p File.dirname filename
           File.open(filename, 'w') {|f| f.write(file_data)}
+          add_and_commit(filename)
         end
       end
       it "should create an Entry object" do
         e = Amiba::Source::Entry.new(:post, @entry.name, @entry.format)
+        puts e.inspect
         e.should be_instance_of(Amiba::Source::Entry)
         e.title.should == "Title"
       end

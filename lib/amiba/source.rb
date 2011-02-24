@@ -50,7 +50,6 @@ module Amiba
       end
 
       def staged_filename
-        puts Amiba::Configuration.staged_dir
         File.join Amiba::Configuration.staged_dir, filename
       end
 
@@ -96,7 +95,7 @@ module Amiba
       end
 
       def metadata=(meta)
-        m = metadata.merge(meta) if meta
+        m = meta ? metadata.merge(meta) : metadata
         @metadata = HashWithIndifferentAccess.new(m)
       end
 
