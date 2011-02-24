@@ -19,6 +19,10 @@ module Amiba
         empty_directory Amiba::Configuration.site_dir
       end
       
+      def copy_favicon
+        copy_file "public/images/favicon.ico", File.join(Amiba::Configuration.site_dir, "public/favicon.ico")
+      end
+
       def copy_javascript
         directory "public/js", File.join(Amiba::Configuration.site_dir, "public/js")
       end
