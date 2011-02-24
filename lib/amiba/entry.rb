@@ -29,7 +29,15 @@ module Amiba
 
       def should_be_valid
         unless @source.valid?
-          raise Thor::Error.new("Error:" + @source.errors)
+          str = ""
+          @source.errors.each_pair do |area, msg|
+            if msg.is_a? Array
+              msg.each {|m| str += "Error detected in #{area}: #{m}\n" }
+            else
+              str += "Error detected in #{area}: #{msg.to_s}\n"
+            end
+          end
+          raise Thor::Error.new("Errors detected:\n" + str)
         end
       end
 
