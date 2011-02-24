@@ -81,7 +81,9 @@ module Amiba
         @source.state = "published"
         @source.save do |filename, file_data|
           remove_file filename, :verbose => false
-          create_file filename, file_data, :verbose => false
+          create_file(filename, :verbose => false) do
+            file_data
+          end
           say_status :published, filename, :green
         end
       end
