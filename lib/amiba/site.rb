@@ -19,6 +19,10 @@ module Amiba
         empty_directory Amiba::Configuration.site_dir
       end
       
+      def copy_favicon
+        copy_file "public/images/favicon.ico", File.join(Amiba::Configuration.site_dir, "public/favicon.ico")
+      end
+
       def copy_javascript
         directory "public/js", File.join(Amiba::Configuration.site_dir, "public/js")
       end
@@ -41,19 +45,32 @@ module Amiba
       def build_pages
         Dir.glob('pages/*').each do |page_file|
           ext = File.extname page_file
-          build_page(File.basename(page_file, ext), ext.sub(/^\./,""))
+          page = Amiba::Source::Page.new(File.basename(page_file, ext), ext.sub(/^\./,""))
+          next unless page.state == "published"
+          build_page page
+        end
+      end
+
+      def build_entries
+        Amiba::Source::Entry.all.each do |entry|
+          build_page entry
         end
       end
       
       private
-      def build_page(name, format)
-        @page = Amiba::Source::Page.new(name, format)
-        return unless @page.state == "published"
-        @layout = Amiba::Source::Layout.new(@page.layout, @page.format)
-        create_file(@page.staged_filename) do @page.content end
-        create_file(@layout.staged_filename) do @layout.content end
-        create_file(@page.output_filename) do
-          Tilt.new(@layout.staged_filename).render(Amiba::Scope.new(@page))
+
+      def build_layout(page)
+        layout = Amiba::Source::Layout.new(page.layout)
+        return layout if File.exists? layout.staged_filename
+        create_file(layout.staged_filename) do layout.content end
+        layout
+      end
+
+      def build_page(page)
+        layout = build_layout(page)
+        create_file(page.staged_filename) do page.content end
+        create_file(page.output_filename) do
+          Tilt.new(layout.staged_filename).render(Amiba::Scope.new(page))
         end
       end
 

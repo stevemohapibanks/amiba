@@ -10,7 +10,8 @@ module Amiba
       class_option :category, required: true
       class_option :title, required: true
       class_option :state, default: 'draft'
-      class_option :description
+      class_option :layout, default: 'default'
+      class_option :slug
 
       def init_source
         @source = Amiba::Source::Entry.new(options[:category].to_sym,
@@ -28,7 +29,15 @@ module Amiba
 
       def should_be_valid
         unless @source.valid?
-          raise Thor::Error.new("Error:" + @source.errors)
+          str = ""
+          @source.errors.each_pair do |area, msg|
+            if msg.is_a? Array
+              msg.each {|m| str += "Error detected in #{area}: #{m}\n" }
+            else
+              str += "Error detected in #{area}: #{msg.to_s}\n"
+            end
+          end
+          raise Thor::Error.new("Errors detected:\n" + str)
         end
       end
 
@@ -81,7 +90,9 @@ module Amiba
         @source.state = "published"
         @source.save do |filename, file_data|
           remove_file filename, :verbose => false
-          create_file filename, file_data, :verbose => false
+          create_file(filename, :verbose => false) do
+            file_data
+          end
           say_status :published, filename, :green
         end
       end

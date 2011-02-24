@@ -12,7 +12,16 @@ module Amiba
 
       def metadata_fields(*names)
         names.each do |name|
-          module_eval <<-STR
+          define_metadata_accessor(name)
+        end
+      end
+
+      def pluralized_name
+        name.demodulize.tableize
+      end
+
+      def define_metadata_accessor(name)
+        module_eval <<-STR
             def #{name}
               metadata[:#{name.to_s}]
             end
@@ -20,12 +29,7 @@ module Amiba
             def #{name}=(val)
               metadata[:#{name.to_s}] = val
             end
-          STR
-        end
-      end
-
-      def pluralized_name
-        name.demodulize.tableize
+        STR
       end
 
     end
@@ -69,6 +73,19 @@ module Amiba
       end
 
       protected
+
+      # FIXME: This makes a stack of assumptions, not least of them that we're
+      # not passing any arguments to the method that's missing. I think 99% of the time
+      # it's fine. 
+      def method_missing(method_sym, *arguments, &block)
+        md = method_sym.to_s.gsub(/=$/,'')
+        if !metadata[md.to_s].nil?
+          self.class.define_metadata_accessor(md)
+          send(method_sym)
+        else
+          super
+        end
+      end
 
       def name=(n)
         @name = n
