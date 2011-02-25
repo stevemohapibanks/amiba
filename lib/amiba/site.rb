@@ -23,6 +23,10 @@ module Amiba
         copy_file "public/images/favicon.ico", File.join(Amiba::Configuration.site_dir, "public/favicon.ico")
       end
 
+      def copy_xdomain
+        copy_file "public/crossdomain.xml", File.join(Amiba::Configuration.site_dir, "public/crossdomain.xml")
+      end
+
       def copy_javascript
         directory "public/js", File.join(Amiba::Configuration.site_dir, "public/js")
       end
