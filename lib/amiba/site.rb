@@ -41,8 +41,9 @@ module Amiba
       
       def process_and_copy_sass
         Dir.glob('public/css/*.scss').each do |scss_file|
-          create_file "site/css/#{File.basename(scss_file).gsub('scss', 'css')}"
-          Tilt.new(scss_file).render
+          create_file "site/css/#{File.basename(scss_file).gsub('scss', 'css')}" do
+            Tilt.new(scss_file).render
+          end
         end
       end
     
