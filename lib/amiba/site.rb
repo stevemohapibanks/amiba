@@ -23,6 +23,10 @@ module Amiba
         copy_file "public/images/favicon.ico", File.join(Amiba::Configuration.site_dir, "public/favicon.ico")
       end
 
+      def copy_xdomain
+        copy_file "public/crossdomain.xml", File.join(Amiba::Configuration.site_dir, "public/crossdomain.xml")
+      end
+
       def copy_javascript
         directory "public/js", File.join(Amiba::Configuration.site_dir, "public/js")
       end
@@ -37,8 +41,9 @@ module Amiba
       
       def process_and_copy_sass
         Dir.glob('public/css/*.scss').each do |scss_file|
-          create_file "site/css/#{File.basename(scss_file).gsub('scss', 'css')}"
-          Tilt.new(scss_file).render
+          create_file "site/css/#{File.basename(scss_file).gsub('scss', 'css')}" do
+            Tilt.new(scss_file).render
+          end
         end
       end
     

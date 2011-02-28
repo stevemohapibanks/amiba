@@ -130,7 +130,7 @@ module Amiba
         end
 
         def markdown
-          "h1. Title\np. Body\n"
+          "# Title #\nBody\n"
         end
       end
     end
