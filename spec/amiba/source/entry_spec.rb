@@ -53,7 +53,6 @@ describe Amiba::Source::Entry do
       end
       it "should create an Entry object" do
         e = Amiba::Source::Entry.new(:post, @entry.name, @entry.format)
-        puts e.inspect
         e.should be_instance_of(Amiba::Source::Entry)
         e.title.should == "Title"
       end
@@ -89,6 +88,18 @@ describe Amiba::Source::Entry do
     describe "with no options" do
       it "should find 6 entries" do
         Amiba::Source::Entry.all.count.should == 6
+      end
+      it "should enable to set the offset to start results" do
+        Amiba::Source::Entry.all(offset: 2).count.should == 4
+        Amiba::Source::Entry.all(offset: 2).first == Amiba::Source::Entry.all[2]
+      end
+      it "should enable a limit on results" do
+        Amiba::Source::Entry.all(limit: 2).count.should == 2
+        Amiba::Source::Entry.all(limit: 2).last == Amiba::Source::Entry.all[1]
+      end
+      it "should handle an offset and limit" do
+        Amiba::Source::Entry.all(offset: 2, limit: 2).count.should == 2
+        Amiba::Source::Entry.all(limit: 2).last == Amiba::Source::Entry.all[3]
       end
     end
     describe "searching for entries in any state" do

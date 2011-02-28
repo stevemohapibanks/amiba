@@ -6,6 +6,8 @@ module Amiba
       def all(args={})
         category = args[:category]
         state = args[:state] || "published"
+        startindex = args[:offset] || 0
+        endindex = args[:limit] ? startindex + args[:limit] - 1 : -1
 
         all_entries.map { |cat, name|
           ext = File.extname name
@@ -13,7 +15,7 @@ module Amiba
         }.select {|entry|
           (category == nil || entry.category == category.singularize) &&
           (state == "any" || entry.state == state)
-        }
+        }[startindex..endindex]
       end
 
       protected
