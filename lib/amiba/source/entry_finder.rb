@@ -25,9 +25,13 @@ module Amiba
       end
 
       def sorted_entries
-        Dir.glob('entries/*/*').sort do |a,b|
+        entries.sort do |a,b|
           last_commit_date(a) <=> last_commit_date(b)
         end
+      end
+
+      def entries
+        Dir.glob('entries/*/*').select {|f| !repo.log(f).empty?}
       end
     end
   end

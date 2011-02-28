@@ -64,6 +64,8 @@ describe Amiba::Source::Entry do
   end
 
   describe "finding all entries" do
+    include Amiba::Repo
+
     before(:each) do
       @entries = []
       [:post, :job].each do |entry_category|
@@ -75,16 +77,14 @@ describe Amiba::Source::Entry do
                                              Factory.attributes_for(:entry, state: state),
                                              "Content")
             entry.save do |filename, file_data|
-              FileUtils.mkdir_p File.dirname filename
+              FileUtils.mkdir_p(File.dirname(filename))
               File.open(filename, 'w') {|f| f.write(file_data)}
+              add_and_commit(filename)
             end
             @entries << entry
           end
         end
       end
-    end
-    after(:each) do
-      @entries.each { |e| File.delete(e.filename) }
     end
     describe "with no options" do
       it "should find 6 entries" do

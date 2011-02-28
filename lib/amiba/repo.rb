@@ -6,7 +6,7 @@ module Amiba
     end
 
     def repo
-      @repo ||= Grit::Repo.new(Dir.pwd)
+      Grit::Repo.new(Dir.pwd)
     rescue
       raise "No repo exists at #{Dir.pwd}"
     end
