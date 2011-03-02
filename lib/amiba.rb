@@ -55,7 +55,6 @@ module Amiba
     end
     
     def create_default_page
-      require 'amiba/page'
       inside(target, :verbose => true) do
         invoke(Amiba::Page::Create,
                [options[:default_page]],
