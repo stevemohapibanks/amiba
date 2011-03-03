@@ -19,13 +19,8 @@ module Amiba
       page_renderer.render(self)
     end
 
-    def entries(category=nil, count=nil)
-      entries = Amiba::Source::Entry.all(category: category)
-      if count
-        return entries[0..count-1]
-      else
-        return entries
-      end
+    def entries(options = {})
+      entries = Amiba::Source::Entry.all(options)
     end
 
     protected
