@@ -17,6 +17,10 @@ group :development do
   gem "ruby-debug19", require: "ruby-debug"
 end
 
+group :wp do
+  gem "sequel"
+end
+
 if ENV['AMIBA_BIN'] == 'true'
   gem 'amiba', require: %w{amiba amiba/all}
 end
