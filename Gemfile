@@ -20,3 +20,8 @@ group :development do
   gem "factory_girl", ">=2.0.0.beta1"
   gem "ruby-debug19", require: "ruby-debug"
 end
+
+group :wp do
+  gem "sequel"
+end
+

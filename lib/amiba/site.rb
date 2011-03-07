@@ -20,11 +20,15 @@ module Amiba
       end
       
       def copy_favicon
-        copy_file "public/images/favicon.ico", File.join(Amiba::Configuration.site_dir, "public/favicon.ico")
+        if File.exists? "public/images/favicon.ico"
+          copy_file "public/images/favicon.ico", File.join(Amiba::Configuration.site_dir, "public/favicon.ico")
+        end
       end
 
       def copy_xdomain
-        copy_file "public/crossdomain.xml", File.join(Amiba::Configuration.site_dir, "public/crossdomain.xml")
+        if File.exists? "public/crossdomain.xml"
+          copy_file "public/crossdomain.xml", File.join(Amiba::Configuration.site_dir, "public/crossdomain.xml")
+        end
       end
 
       def copy_javascript
