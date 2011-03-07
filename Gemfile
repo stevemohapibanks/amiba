@@ -9,14 +9,14 @@ gem "i18n", "~> 0.5.0"
 gem "rdiscount", "~> 1.6.8"
 gem "grit", "~> 2.4.1"
 
+if ENV['AMIBA_BIN'] == 'true'
+  gem 'amiba', require: %w{amiba amiba/all}
+end
+
 group :development do
   gem "rspec"
   gem "rspec_tag_matchers"
   gem "autotest"
   gem "factory_girl", ">=2.0.0.beta1"
   gem "ruby-debug19", require: "ruby-debug"
-end
-
-if ENV['AMIBA_BIN'] == 'true'
-  gem 'amiba', require: %w{amiba amiba/all}
 end
