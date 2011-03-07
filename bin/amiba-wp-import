@@ -1,0 +1,113 @@
+#!/usr/bin/env ruby
+# -*- mode: ruby -*-
+require 'rubygems'
+
+if !File.exist?('Gemfile')
+  ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile", __FILE__)
+end
+
+ENV["AMIBA_BIN"] = "true"
+
+IMAGE_ROOT="http://wp-uploads.s3.amazonaws.com/wp-content/uploads/"
+
+require 'bundler/setup'
+Bundler.require(:default, :production, :wp)
+
+require 'optparse'
+require 'amiba/reverse_markdown'
+
+require 'cgi'
+require 'uri'
+
+include Amiba::Repo
+
+options = {}
+options[:dbtype] = "mysql"
+
+OptionParser.new do |opt|
+  opt.on("--dbuser [USER]", "The database user to connect as") do |u|
+    options[:dbuser] = u
+  end
+  opt.on("--dbtype [TYPE]", "The type of database to connect to. Default is MySQL") do |u|
+    options[:dbtype] = u
+  end
+  opt.on("--dbhost [HOST]", "The database host to connect to") do |u|
+    options[:dbhost] = u
+  end
+  opt.on("--db [NAME]", "The database to connect to") do |u|
+    options[:db] = u
+  end
+  opt.on("--dbpass [PASS]", "The database password to connect with") do |u|
+    options[:dbpass] = u
+  end
+  opt.on("--target [TARGET]", "The directory to create an amiba structure in") do |u|
+    options[:target] = u
+  end
+
+end.parse!
+
+path, name = File.split options[:target]
+if ! system "amiba create #{name} --path #{path}"
+  puts "Couldn't create a basic amiba site at #{options[:target]}!"
+  exit 1
+end
+
+Dir.chdir options[:target]
+
+
+DB = Sequel.connect(:adapter=>options[:dbtype], :host => options[:dbhost], :database=>options[:db], :user => options[:dbuser], :password => options[:dbpass], :encoding => 'utf8')
+Sequel::MySQL.convert_invalid_date_time = nil 
+
+DB[:wp_posts].filter(:post_type=>"post").each do |post|
+  rm = Amiba::ReverseMarkdown.new
+  meta = {}
+  category = DB[:wp_terms].select(:name).join(:wp_term_relationships, :term_taxonomy_id=>:term_id).filter(:object_id=>post[:ID]).first
+  next unless category
+
+  meta[:author] = DB[:wp_users].select(:display_name).filter(:ID=>post[:post_author]).first[:display_name]
+  meta[:slug] = post[:post_excerpt].to_s
+  meta[:layout] = 'default'
+  meta[:state] = post[:post_status] == "publish" ? "published" : "draft"
+  meta[:title] = post[:post_title].to_s
+  meta[:id] = post[:ID]
+
+  #yet more assumptions (like the fact that an attached file is an
+  #image!)
+  attach = DB[:wp_postmeta].select(:meta_value).filter(:post_id=>DB[:wp_posts].select(:ID).filter({:ID=>post[:ID]} | {:post_parent=>post[:ID]})).filter(:meta_key=>"_wp_attached_file").first
+ 
+  meta[:image] = URI.join(IMAGE_ROOT, attach[:meta_value]).to_s if attach
+
+  # FIXME: (or just run away) kludge to get round UTF-8 madness - just
+  # turn UTF-8 raw chars into form encoded equivalent, then cgi unescape
+  if post[:post_content].encoding.name == "ASCII-8BIT"
+    content = CGI.unescape(post[:post_content].to_s.gsub(/([^ a-zA-Z0-9_.-]+)/n) { '%'+$1.unpack('H2'*$1.bytesize).join('%').upcase }).gsub(/(\w+\s?)&(\s?\w+)/,'\1&amp;\2')
+  else 
+    content = post[:post_content].gsub(/\s(\w+\s?)&(\s?\w+)/,'\1 &amp; \2')
+  end
+  begin
+    md = rm.parse_string("<p>#{content}</p>")
+  rescue 
+    puts "Failed to parse content for ID: #{post[:ID]}: #{$!}"
+  end
+
+  entry = Amiba::Source::Entry.new(category[:name].to_s, post[:post_name], 'markdown', meta, md.nil? ? post[:post_content].to_s : md)
+
+  unless entry.valid?
+    str = ""
+    entry.errors.each_pair do |area, msg|
+      if msg.is_a? Array
+        msg.each {|m| str += "Error detected in #{area}: #{m}\n" }
+      else
+        str += "Error detected in #{area}: #{msg.to_s}\n"
+      end
+    end
+    puts str
+  end
+
+  entry.save do |file, data|
+    FileUtils.mkdir_p File.dirname(file)
+    File.open(file, 'w') { |f| f.write(data) }
+    add_and_commit file
+  end
+
+end
