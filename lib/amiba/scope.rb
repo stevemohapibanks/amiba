@@ -23,6 +23,11 @@ module Amiba
       Amiba::Source::Entry
     end
 
+    def partial(path, locals={})
+      p = Amiba::Source::Partial.new path
+      Tilt.new(p.filename).render(Amiba::Scope.new(p), locals)
+    end
+
     protected
 
     def page_renderer
