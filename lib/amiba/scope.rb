@@ -19,8 +19,8 @@ module Amiba
       page_renderer.render(self)
     end
 
-    def entries(options = {})
-      entries = Amiba::Source::Entry.all(options)
+    def entries
+      Amiba::Source::Entry
     end
 
     protected
