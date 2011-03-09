@@ -12,6 +12,7 @@ module Amiba
     end
 
     class FinderProxy
+      include Amiba::Repo
       include Enumerable
 
       def each
@@ -39,7 +40,9 @@ module Amiba
         result = (scopes[:state] || StateScope.new).apply(result)
         result = scopes[:offset].apply(result) if scopes[:offset]
         result = scopes[:limit].apply(result) if scopes[:limit]
-        result
+        result.sort do |a, b|
+          last_commit_date(a.filename) <=> last_commit_date(b.filename)
+        end
       end
 
       [:draft, :published, :any].each do |state|
