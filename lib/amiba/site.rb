@@ -52,7 +52,7 @@ module Amiba
       end
     
       def build_pages
-        Dir.glob('pages/*').each do |page_file|
+        Dir.glob('pages/[^_]*').each do |page_file|
           ext = File.extname page_file
           page = Amiba::Source::Page.new(File.basename(page_file, ext), ext.sub(/^\./,""))
           next unless page.state == "published"
