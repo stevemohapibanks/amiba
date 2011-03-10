@@ -38,11 +38,13 @@ module Amiba
       def entries
         result = (scopes[:category] || CategoryScope.new).apply
         result = (scopes[:state] || StateScope.new).apply(result)
+        # reverse sorting is a more natural approach
+        result.sort! do |a, b|
+          last_commit_date(b.filename) <=> last_commit_date(a.filename)
+        end
         result = scopes[:offset].apply(result) if scopes[:offset]
         result = scopes[:limit].apply(result) if scopes[:limit]
-        result.sort do |a, b|
-          last_commit_date(a.filename) <=> last_commit_date(b.filename)
-        end
+        result
       end
 
       [:draft, :published, :any].each do |state|
