@@ -66,6 +66,15 @@ module Amiba
         end
       end
       
+      def build_feeds
+        Dir.glob('feeds/*.builder').each do |feed_file|
+          feed = Amiba::Source::Feed.new(feed_file)
+          create_file(feed.output_filename) do
+            Tilt.new(feed.filename).render(Amiba::Scope.new(feed), :xml => Builder::XmlMarkup.new)
+          end
+        end
+      end
+
       private
 
       def build_layout(page)
