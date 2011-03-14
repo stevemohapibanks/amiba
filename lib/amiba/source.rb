@@ -71,6 +71,10 @@ module Amiba
         @content
       end
 
+      def metadata
+        @metadata ||= source_valid? ? documents.first : {}
+      end
+
       protected
 
       def method_missing(method_sym, *args, &block)
@@ -85,10 +89,6 @@ module Amiba
 
       def name=(n)
         @name = n
-      end
-
-      def metadata
-        @metadata ||= source_valid? ? documents.first : {}
       end
 
       def metadata=(meta)
