@@ -8,6 +8,7 @@ gem "activemodel", "~>3.0.3", require: 'active_model'
 gem "i18n", "~> 0.5.0"
 gem "rdiscount", "~> 1.6.8"
 gem "grit", "~> 2.4.1"
+gem "yajl-ruby", require: "yajl/json_gem"
 
 group :development do
   gem "rspec"

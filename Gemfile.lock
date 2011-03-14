@@ -78,6 +78,7 @@ GEM
     thor (0.14.6)
     tilt (1.2.1)
     tzinfo (0.3.23)
+    yajl-ruby (0.8.1)
 
 PLATFORMS
   ruby
@@ -97,3 +98,4 @@ DEPENDENCIES
   sequel
   thor (~> 0.14.6)
   tilt (~> 1.2.1)
+  yajl-ruby
