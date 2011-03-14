@@ -32,7 +32,7 @@ module Amiba
         Dir[File.join(Amiba::Configuration.site_dir, "public", "**/*")].each do |ent|
           next if File.directory? ent
           path = File.expand_path ent
-          name = relpath(path, File.join(Amiba::Configuration.site_dir, "public"))
+          name = File.relpath(path, File.join(Amiba::Configuration.site_dir, "public"))
           data = File.open path
           file = @bucket.files.create(:key=>name, :body=>data, :public=>true)
           say_status "Uploaded", name, :green
@@ -51,10 +51,6 @@ module Amiba
 
       def location
         Amiba::Configuration.s3_location || "EU"
-      end
-
-      def relpath(fn, dir)
-        File.join(File.expand_path(fn).split(File::SEPARATOR) - File.expand_path(dir).split(File::SEPARATOR))
       end
 
     end
@@ -110,9 +106,9 @@ module Amiba
       end
     
       def build_pages
-        Dir.glob('pages/[^_]*').each do |page_file|
-          ext = File.extname page_file
-          page = Amiba::Source::Page.new(File.basename(page_file, ext), ext.sub(/^\./,""))
+        Dir.glob('pages/**/[^_]*').each do |page_file|
+          next if File.directory? page_file
+          page = Amiba::Source::Page.new(File.relpath(page_file, "pages"))
           next unless page.state == "published"
           build_page page
         end

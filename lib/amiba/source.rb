@@ -39,7 +39,12 @@ module Amiba
       attr_accessor :format
 
       def initialize(name, format='haml', metadata = nil, content = nil)
-        self.name = name
+        ext = File.extname name
+        fn = File.basename(name, ext)
+        dn = File.dirname name
+        f = dn == "." ? fn : File.join(dn, fn)
+
+        self.name = f
         self.format = format
         self.metadata = metadata
         self.content = content
