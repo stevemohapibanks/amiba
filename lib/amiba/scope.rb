@@ -19,8 +19,25 @@ module Amiba
       page_renderer.render(self)
     end
 
-    def entries(options = {})
-      entries = Amiba::Source::Entry.all(options)
+    def entries
+      Amiba::Source::Entry
+    end
+
+    def partial(path, locals={})
+      p = Amiba::Source::Partial.new path
+      Tilt.new(p.filename).render(Amiba::Scope.new(p), locals)
+    end
+
+    def site_name
+      Amiba::Configuration.site_name.nil? ? "" : "http://#{Amiba::Configuration.site_name}/"
+    end
+
+    def full_url(frag)
+      if site_name.empty?
+        frag
+      else
+        URI.join(site_name, frag).to_s
+      end
     end
 
     protected

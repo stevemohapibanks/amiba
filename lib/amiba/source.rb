@@ -71,16 +71,17 @@ module Amiba
         @content
       end
 
+      def metadata
+        @metadata ||= source_valid? ? documents.first : {}
+      end
+
       protected
 
-      # FIXME: This makes a stack of assumptions, not least of them that we're
-      # not passing any arguments to the method that's missing. I think 99% of the time
-      # it's fine. 
-      def method_missing(method_sym, *arguments, &block)
+      def method_missing(method_sym, *args, &block)
         md = method_sym.to_s.gsub(/=$/,'')
         if !metadata[md.to_s].nil?
           self.class.define_metadata_accessor(md)
-          send(method_sym)
+          send(method_sym, *args, &block)
         else
           super
         end
@@ -88,10 +89,6 @@ module Amiba
 
       def name=(n)
         @name = n
-      end
-
-      def metadata
-        @metadata ||= source_valid? ? documents.first : {}
       end
 
       def metadata=(meta)

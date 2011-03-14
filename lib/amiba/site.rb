@@ -1,6 +1,64 @@
 module Amiba
   module Site
 
+    class S3Upload < Thor::Group
+      include Amiba::Generator
+
+      namespace :"site:upload:s3"
+
+      class_option :credentials, default: :default
+
+      def init_s3
+        Fog.credential = options[:credentials].to_sym
+        @s3 ||= Fog::Storage.new(:provider=>'AWS')
+      end
+
+      def create
+        invoke Amiba::Site::Generate
+      end
+
+      def configure_s3
+        if ! @s3.directories.get bucket 
+          @bucket = @s3.directories.create(:key=>bucket, :public=>true, :location=>location)
+          say_status "Created", @bucket.key, :green
+          @s3.put_bucket_website(bucket,"index.html")
+          say_status "Configured", @bucket.key, :green
+        else
+          @bucket = @s3.directories.get bucket 
+        end
+      end
+
+      def upload_files
+        Dir[File.join(Amiba::Configuration.site_dir, "public", "**/*")].each do |ent|
+          next if File.directory? ent
+          path = File.expand_path ent
+          name = relpath(path, File.join(Amiba::Configuration.site_dir, "public"))
+          data = File.open path
+          file = @bucket.files.create(:key=>name, :body=>data, :public=>true)
+          say_status "Uploaded", name, :green
+        end
+      end
+
+      def complete
+        host = "http://#{bucket}.s3-website-#{Fog.credentials[:region]}.amazonaws.com/"
+        say_status "Available at", host, :green
+      end
+
+      private
+      def bucket
+        Amiba::Configuration.site_name
+      end
+
+      def location
+        Amiba::Configuration.s3_location || "EU"
+      end
+
+      def relpath(fn, dir)
+        File.join(File.expand_path(fn).split(File::SEPARATOR) - File.expand_path(dir).split(File::SEPARATOR))
+      end
+
+    end
+
     class Generate < Thor::Group
       include Amiba::Generator
 
@@ -52,7 +110,7 @@ module Amiba
       end
     
       def build_pages
-        Dir.glob('pages/*').each do |page_file|
+        Dir.glob('pages/[^_]*').each do |page_file|
           ext = File.extname page_file
           page = Amiba::Source::Page.new(File.basename(page_file, ext), ext.sub(/^\./,""))
           next unless page.state == "published"
@@ -65,7 +123,29 @@ module Amiba
           build_page entry
         end
       end
-      
+
+      def build_json
+        Dir.glob('entries/*').each do |cat|
+          c = File.basename cat
+          create_file(File.join(Amiba::Configuration.site_dir, "public", c, "latest.json")) do
+            Amiba::Source::Entry.send(c.to_sym.pluralize).limit(20).each.inject([]) do |acc, ent|
+              a = ent.metadata
+              a["content"] = ent.render
+              acc << a
+            end.to_json
+          end
+        end
+      end
+
+      def build_feeds
+        Dir.glob('feeds/*.builder').each do |feed_file|
+          feed = Amiba::Source::Feed.new(feed_file)
+          create_file(feed.output_filename) do
+            Tilt.new(feed.filename).render(Amiba::Scope.new(feed), :xml => Builder::XmlMarkup.new)
+          end
+        end
+      end
+
       private
 
       def build_layout(page)

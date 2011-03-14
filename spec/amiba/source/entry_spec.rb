@@ -91,15 +91,15 @@ describe Amiba::Source::Entry do
       end
       it "should enable to set the offset to start results" do
         Amiba::Source::Entry.offset(2).count.should == 4
-        Amiba::Source::Entry.offset(2).first == Amiba::Source::Entry.all[2]
+        Amiba::Source::Entry.offset(2).first.name.should == Amiba::Source::Entry.all[2].name
       end
       it "should enable a limit on results" do
         Amiba::Source::Entry.limit(2).count.should == 2
-        Amiba::Source::Entry.limit(2).last == Amiba::Source::Entry.all[1]
+        Amiba::Source::Entry.limit(2).last.name.should == Amiba::Source::Entry.all[1].name
       end
       it "should handle an offset and limit" do
         Amiba::Source::Entry.offset(2).limit(2).count.should == 2
-        Amiba::Source::Entry.offset(2).limit(2).last == Amiba::Source::Entry.all[3]
+        Amiba::Source::Entry.offset(2).limit(2).last.name.should == Amiba::Source::Entry.all[3].name
       end
     end
     describe "searching for entries in" do
@@ -127,6 +127,14 @@ describe Amiba::Source::Entry do
             e.category.should == category.to_s
           end
         end
+      end
+    end
+    describe "returning specific items" do
+      it "should return the last modified item" do
+        Amiba::Source::Entry.all.last.name.should == Amiba::Source::Entry.all[5].name
+      end
+      it "should return the first item" do
+        Amiba::Source::Entry.all.first.name.should == Amiba::Source::Entry.all[0].name
       end
     end
   end

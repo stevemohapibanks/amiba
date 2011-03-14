@@ -25,13 +25,18 @@ module Amiba
         File.join(Amiba::Configuration.staged_dir, filename)
       end
 
+      def output_filename
+        File.join(Amiba::Configuration.site_dir, 'public', category.to_s.downcase.pluralize, "#{name}.html")
+      end
+
       def link
         URI.escape( ["", category.to_s.downcase.pluralize, "#{name}.html"].join("/") )
       end
 
-      def output_filename
-        File.join(Amiba::Configuration.site_dir, 'public', category.to_s.downcase.pluralize, "#{name}.html")
+      def render
+        Tilt.new(self.staged_filename).render(Amiba::Scope.new(self))
       end
+
     end
   end
 end

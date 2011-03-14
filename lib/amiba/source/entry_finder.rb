@@ -12,10 +12,11 @@ module Amiba
     end
 
     class FinderProxy
+      include Amiba::Repo
       include Enumerable
 
-      def each
-        entries.each {|entry| yield entry}
+      def each(&blk)
+        entries.each(&blk)
       end
 
       def first
@@ -37,6 +38,10 @@ module Amiba
       def entries
         result = (scopes[:category] || CategoryScope.new).apply
         result = (scopes[:state] || StateScope.new).apply(result)
+        # reverse sorting is a more natural approach
+        result.sort! do |a, b|
+          last_commit_date(b.filename) <=> last_commit_date(a.filename)
+        end
         result = scopes[:offset].apply(result) if scopes[:offset]
         result = scopes[:limit].apply(result) if scopes[:limit]
         result
