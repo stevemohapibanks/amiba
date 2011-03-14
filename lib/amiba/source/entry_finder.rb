@@ -15,8 +15,8 @@ module Amiba
       include Amiba::Repo
       include Enumerable
 
-      def each
-        entries.each {|entry| yield entry}
+      def each(&blk)
+        entries.each(&blk)
       end
 
       def first
