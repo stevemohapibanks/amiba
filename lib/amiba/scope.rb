@@ -28,6 +28,18 @@ module Amiba
       Tilt.new(p.filename).render(Amiba::Scope.new(p), locals)
     end
 
+    def site_name
+      Amiba::Configuration.site_name.nil? ? "" : "http://#{Amiba::Configuration.site_name}/"
+    end
+
+    def full_url(frag)
+      if site_name.empty?
+        frag
+      else
+        URI.join(site_name, frag).to_s
+      end
+    end
+
     protected
 
     def page_renderer
