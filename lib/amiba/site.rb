@@ -65,7 +65,20 @@ module Amiba
           build_page entry
         end
       end
-      
+
+      def build_json
+        Dir.glob('entries/*').each do |cat|
+          c = File.basename cat
+          create_file(File.join(Amiba::Configuration.site_dir, "public", c, "latest.json")) do
+            Amiba::Source::Entry.send(c.to_sym.pluralize).limit(20).each.inject([]) do |acc, ent|
+              a = ent.metadata
+              a["content"] = ent.render
+              acc << a
+            end.to_json
+          end
+        end
+      end
+
       def build_feeds
         Dir.glob('feeds/*.builder').each do |feed_file|
           feed = Amiba::Source::Feed.new(feed_file)
