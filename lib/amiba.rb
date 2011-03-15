@@ -31,7 +31,7 @@ module Amiba
     
     argument :name
     class_option :path 
-    class_option :default_page, :default => "home"
+    class_option :default_page, :default => "index"
 
     def init_git
       @repo = Grit::Repo.init(target)
