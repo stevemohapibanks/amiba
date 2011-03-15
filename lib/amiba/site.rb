@@ -90,7 +90,7 @@ module Amiba
       end
 
       def copy_images
-        directory "public/images", File.join(Amiba::Configuration.site_dir, "/public/images")
+        directory "public/images", File.join(Amiba::Configuration.site_dir, "public/images")
       end
       
       def copy_css
