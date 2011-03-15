@@ -94,7 +94,9 @@ module Amiba
       end
       
       def copy_css
-        directory "public/css", File.join(Amiba::Configuration.site_dir, "/public/css")
+        Dir.glob('public/css/*.css').each do |css_file|
+          copy_file css_file, File.join(Amiba::Configuration.site_dir, "public/css/", File.basename(css_file))
+        end
       end
       
       def process_and_copy_sass
