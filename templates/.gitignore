@@ -1,0 +1,4 @@
+site
+staged
+Gemfile.lock
+.sass-cache

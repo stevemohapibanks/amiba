@@ -37,6 +37,10 @@ module Amiba
       @repo = Grit::Repo.init(target)
     end
     
+    def create_gitignore
+      copy_file File.join("templates",'.gitignore'), File.join(target, '.gitignore')
+    end
+
     def create_gemfile
       copy_file 'Gemfile', File.join(target, 'Gemfile')
     end
