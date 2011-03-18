@@ -1,4 +1,5 @@
 require 'amiba/source'
+require 'etc'
 
 module Amiba
   module Page
@@ -17,6 +18,7 @@ module Amiba
       class_option :description, :required => true
       class_option :category, :default => "plain"
       class_option :state, :default => "draft"
+      class_option :author, :default => Etc.getpwnam(ENV["USER"])["gecos"].split(",")[0]
 
       def init_source
         @source = Amiba::Source::Page.new(name, format, options, Templates.send(format.to_sym))

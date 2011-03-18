@@ -1,3 +1,5 @@
+require 'etc'
+
 module Amiba
   module Entry
 
@@ -11,6 +13,7 @@ module Amiba
       class_option :title, :required => true
       class_option :state, :default => 'draft'
       class_option :layout, :default => 'default'
+      class_option :author, :default => Etc.getpwnam(ENV["USER"])["gecos"].split(",")[0]
       class_option :slug
 
       def init_source
