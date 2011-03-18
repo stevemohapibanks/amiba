@@ -21,7 +21,7 @@ module Amiba
                                            name,
                                            format,
                                            options,
-                                           "h1. New post\n")
+                                           "# New post\n")
       end
 
       def should_not_exist
