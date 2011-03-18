@@ -6,7 +6,7 @@ module Amiba
 
       namespace :"site:upload:s3"
 
-      class_option :credentials, default: :default
+      class_option :credentials, :default => :default
 
       def init_s3
         Fog.credential = options[:credentials].to_sym
