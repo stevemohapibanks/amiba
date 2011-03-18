@@ -1,5 +1,5 @@
 #!/bin/bash
 gem uninstall -x amiba
-rm amiba-0.0.2.gem
+rm amiba-0.0.3.gem
 gem build amiba.gemspec
-gem install amiba-0.0.2.gem
+gem install amiba-0.0.3.gem
