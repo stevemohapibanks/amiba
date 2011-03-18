@@ -35,6 +35,7 @@ module Amiba
     end
 
     module InstanceMethods
+      include Amiba::Repo
 
       attr_accessor :format
 
@@ -78,6 +79,10 @@ module Amiba
 
       def metadata
         @metadata ||= source_valid? ? documents.first : {}
+      end
+
+      def pubdate
+        @metadata["pubdate"] ||= last_commit_date filename
       end
 
       protected
