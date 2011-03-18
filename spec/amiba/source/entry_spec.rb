@@ -27,6 +27,10 @@ describe Amiba::Source::Entry do
         @entry.category = "entry"
         @entry.output_filename.should == 'site/public/entries/new_post.html'
       end
+      it "shouldn't pluralize 'blog'" do
+        @entry.category = "blog"
+        @entry.filename.should == 'entries/blog/new_post.haml'
+      end
       it "should have a link" do
         @entry.link.should == "/posts/new_post.html"
       end

@@ -4,6 +4,10 @@ module Amiba
       extend Amiba::Source::EntryFinder
       include Amiba::Source
       
+      ActiveSupport::Inflector.inflections do |inflect|
+        inflect.uncountable "blog"
+      end
+
       attr_accessor :category
       metadata_fields :title, :slug, :state, :layout
 
