@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency('i18n',          '~> 0.5.0')
   s.add_dependency('rdiscount',     '~> 1.6.8')
   s.add_dependency('fog',           '>= 0.6.0')
+  s.add_dependency('grit',          '~> 2.4.1')
 
   s.add_development_dependency("rspec")
   s.add_development_dependency("rspec_tag_matchers")
