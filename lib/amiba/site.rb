@@ -1,6 +1,34 @@
 module Amiba
   module Site
 
+    class Preview < Thor::Group
+      include Amiba::Generator
+
+      namespace :"site:preview"
+      class_option :port, :default => 4321
+
+      def create
+        invoke Amiba::Site::Generate
+      end
+
+      def preview
+        root = File.expand_path(File.join(Amiba::Configuration.site_dir, "public"))
+        logger = WEBrick::Log.new($stderr, WEBrick::Log::ERROR)
+        server = WEBrick::HTTPServer.new({:Port => options[:port], :DocumentRoot => root, :Logger => logger})
+
+        ['INT', 'TERM'].each {|signal| 
+          trap(signal) {server.shutdown}
+        }
+
+        say ""
+        say ""
+        say "Preview available at http://localhost:#{options[:port]}/"
+        say "To end, press Ctrl+C"
+
+        server.start
+      end
+    end
+
     class S3Upload < Thor::Group
       include Amiba::Generator
 
