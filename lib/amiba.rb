@@ -57,14 +57,18 @@ module Amiba
         empty_directory File.join(target, dirname)
       end
     end
-    
+
+    def create_default_feeds
+      directory File.join("templates", "feeds"), File.join(target, dirname)
+    end
+
     def create_default_page
       inside(target, :verbose => true) do
         invoke(Amiba::Page::Create,
                [options[:default_page]],
                :title => name.titleize,
                :description => "#{name.titleize} Homepage. Please change this to be more descriptive")
-      end   
+      end
     end
 
     def commit_to_git
