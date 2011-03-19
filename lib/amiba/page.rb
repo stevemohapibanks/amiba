@@ -1,4 +1,3 @@
-require 'amiba/source'
 require 'etc'
 
 module Amiba

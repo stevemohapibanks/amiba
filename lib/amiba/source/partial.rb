@@ -1,3 +1,5 @@
+require 'amiba/source'
+
 module Amiba
   module Source
     class Partial

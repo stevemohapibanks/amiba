@@ -1,3 +1,6 @@
+require 'fog'
+require 'webrick'
+
 module Amiba
   module Site
 

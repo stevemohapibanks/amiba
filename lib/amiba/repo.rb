@@ -1,3 +1,5 @@
+require 'grit'
+
 module Amiba
   module Repo
 

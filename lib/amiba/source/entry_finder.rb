@@ -1,3 +1,5 @@
+require 'amiba/repo'
+
 module Amiba
   module Source
     module EntryFinder

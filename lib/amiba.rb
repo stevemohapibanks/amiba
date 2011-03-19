@@ -1,3 +1,7 @@
+require 'thor'
+require 'thor/group'
+require 'thor/runner'
+
 module Amiba
 
   class Util
@@ -91,4 +95,11 @@ module Amiba
   end
 end
 
-
+if Amiba::Util.in_amiba_application?
+  require 'amiba/all'
+  require 'amiba/scope'
+  require 'amiba/page'
+  require 'amiba/entry'
+  require 'amiba/site'
+end
+#
