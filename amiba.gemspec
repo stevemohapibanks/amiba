@@ -4,7 +4,7 @@ $:.unshift lib unless $:.include?(lib)
  
 Gem::Specification.new do |s|
   s.name        = "amiba"
-  s.version     = "0.0.3"
+  s.version     = "0.0.4"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Steven Mohapi-Banks"]
   s.email       = ["s.mohapi-banks@digital-science.com"]
@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
  
   s.required_rubygems_version = ">= 1.3.6"
  
-  s.files        = Dir.glob("{bin,lib,templates}/**/*") + Dir.glob("templates/**/.empty_directory") + %w{Thorfile Gemfile templates/.amiba}
+  s.files        = Dir.glob("{bin,lib,templates}/**/*") + Dir.glob("templates/**/.empty_directory") + %w{Thorfile templates/.amiba}
   s.executable   = 'amiba'
   s.require_path = 'lib'
 
