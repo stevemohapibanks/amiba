@@ -140,18 +140,18 @@ module Amiba
         end
       end
     
+      def build_entries
+        Amiba::Source::Entry.all.each do |entry|
+          build_page entry
+        end
+      end
+
       def build_pages
         Dir.glob('pages/**/[^_]*').each do |page_file|
           next if File.directory? page_file
           page = Amiba::Source::Page.new(File.relpath(page_file, "pages"))
           next unless page.state == "published"
           build_page page
-        end
-      end
-
-      def build_entries
-        Amiba::Source::Entry.all.each do |entry|
-          build_page entry
         end
       end
 
@@ -171,8 +171,12 @@ module Amiba
       def build_feeds
         Dir.glob('feeds/*.builder').each do |feed_file|
           feed = Amiba::Source::Feed.new(feed_file)
-          create_file(feed.output_filename) do
-            Tilt.new(feed.filename).render(Amiba::Scope.new(feed), :xml => Builder::XmlMarkup.new)
+          begin
+            create_file(feed.output_filename) do
+              Tilt.new(feed.filename).render(Amiba::Scope.new(feed), :xml => Builder::XmlMarkup.new)
+            end
+          rescue
+            puts "Unable to process #{feed.name}, skipping" 
           end
         end
       end
@@ -189,8 +193,12 @@ module Amiba
       def build_page(page)
         layout = build_layout(page)
         create_file(page.staged_filename) do page.content end
-        create_file(page.output_filename) do
-          Tilt.new(layout.staged_filename).render(Amiba::Scope.new(page))
+        begin
+          create_file(page.output_filename) do
+            Tilt.new(layout.staged_filename).render(Amiba::Scope.new(page))
+          end
+        rescue
+          puts "Unable to process #{page.name}, skipping" 
         end
       end
 
