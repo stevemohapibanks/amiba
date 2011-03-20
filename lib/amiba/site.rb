@@ -40,6 +40,8 @@ module Amiba
       class_option :credentials, :default => :default
 
       def init_s3
+        cf = File.expand_path(File.join(Dir.pwd, ".fog"))
+        Fog.credentials_path = cf if File.exists? cf
         Fog.credential = options[:credentials].to_sym
         @s3 ||= Fog::Storage.new(:provider=>'AWS')
       end
