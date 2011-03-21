@@ -1,3 +1,4 @@
+require 'amiba/source'
 
 module Amiba
   module Source

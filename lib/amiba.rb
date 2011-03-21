@@ -1,3 +1,7 @@
+require 'thor'
+require 'thor/group'
+require 'thor/runner'
+
 module Amiba
 
   class Util
@@ -31,12 +35,16 @@ module Amiba
     
     argument :name
     class_option :path 
-    class_option :default_page, :default => "home"
+    class_option :default_page, :default => "index"
 
     def init_git
       @repo = Grit::Repo.init(target)
     end
     
+    def create_gitignore
+      copy_file File.join("templates",'.gitignore'), File.join(target, '.gitignore')
+    end
+
     def create_gemfile
       copy_file 'Gemfile', File.join(target, 'Gemfile')
     end
@@ -53,14 +61,18 @@ module Amiba
         empty_directory File.join(target, dirname)
       end
     end
-    
+
+    def create_default_feeds
+      directory File.join("templates", "feeds"), File.join(target, dirname)
+    end
+
     def create_default_page
       inside(target, :verbose => true) do
         invoke(Amiba::Page::Create,
                [options[:default_page]],
                :title => name.titleize,
                :description => "#{name.titleize} Homepage. Please change this to be more descriptive")
-      end   
+      end
     end
 
     def commit_to_git
@@ -83,4 +95,11 @@ module Amiba
   end
 end
 
-
+if Amiba::Util.in_amiba_application?
+  require 'amiba/all'
+  require 'amiba/scope'
+  require 'amiba/page'
+  require 'amiba/entry'
+  require 'amiba/site'
+end
+#

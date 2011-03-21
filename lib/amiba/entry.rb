@@ -1,3 +1,5 @@
+require 'etc'
+
 module Amiba
   module Entry
 
@@ -6,11 +8,12 @@ module Amiba
       include Amiba::Repo
 
       namespace :"entry:create"
-      argument :format, default: 'markdown'
-      class_option :category, required: true
-      class_option :title, required: true
-      class_option :state, default: 'draft'
-      class_option :layout, default: 'default'
+      argument :format, :default => 'markdown'
+      class_option :category, :required => true
+      class_option :title, :required => true
+      class_option :state, :default => 'draft'
+      class_option :layout, :default => 'default'
+      class_option :author, :default => Etc.getpwnam(ENV["USER"])["gecos"].split(",")[0]
       class_option :slug
 
       def init_source
@@ -18,7 +21,7 @@ module Amiba
                                            name,
                                            format,
                                            options,
-                                           "h1. New post\n")
+                                           "# New post\n")
       end
 
       def should_not_exist
@@ -67,8 +70,8 @@ module Amiba
 
       namespace :"entry:publish"
       argument :name
-      argument :format, default: 'markdown'
-      class_option :category, required: true
+      argument :format, :default => 'markdown'
+      class_option :category, :required => true
 
       def init_source
         @source = Amiba::Source::Entry.new(options[:category].to_sym, name, format)

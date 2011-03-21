@@ -1,4 +1,4 @@
-require 'amiba/source'
+require 'etc'
 
 module Amiba
   module Page
@@ -11,12 +11,13 @@ module Amiba
 
       namespace :"page:create"
       argument :name
-      argument :format, default: "haml"
-      class_option :layout, default: "default"
-      class_option :title, required: true
-      class_option :description, required: true
-      class_option :category, default: "plain"
-      class_option :state, default: "draft"
+      argument :format, :default => "haml"
+      class_option :layout, :default =>"default"
+      class_option :title, :required => true
+      class_option :description, :required => true
+      class_option :category, :default => "plain"
+      class_option :state, :default => "draft"
+      class_option :author, :default => Etc.getpwnam(ENV["USER"])["gecos"].split(",")[0]
 
       def init_source
         @source = Amiba::Source::Page.new(name, format, options, Templates.send(format.to_sym))
@@ -54,7 +55,7 @@ module Amiba
 
       namespace :"page:publish"
       argument :name
-      argument :format, default: 'haml'
+      argument :format, :default => 'haml'
 
       def init_source
         @source = Amiba::Source::Page.new(name, format)
@@ -95,7 +96,7 @@ module Amiba
 
       namespace :"page:destroy"
       argument :name
-      argument :format, default: 'haml'
+      argument :format, :default => 'haml'
 
       def init_source
         @source = Amiba::Source::Page.new(name, format)

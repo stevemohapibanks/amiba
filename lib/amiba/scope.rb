@@ -29,14 +29,18 @@ module Amiba
     end
 
     def site_name
+       Amiba::Configuration.site_name.nil? ? "" : Amiba::Configuration.site_name
+    end
+
+    def site_url
       Amiba::Configuration.site_name.nil? ? "" : "http://#{Amiba::Configuration.site_name}/"
     end
 
     def full_url(frag)
-      if site_name.empty?
+      if site_url.empty?
         frag
       else
-        URI.join(site_name, frag).to_s
+        URI.join(site_url, frag).to_s
       end
     end
 

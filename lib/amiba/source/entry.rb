@@ -1,9 +1,15 @@
+require 'amiba/source'
+
 module Amiba
   module Source
     class Entry
       extend Amiba::Source::EntryFinder
       include Amiba::Source
       
+      ActiveSupport::Inflector.inflections do |inflect|
+        inflect.uncountable "blog"
+      end
+
       attr_accessor :category
       metadata_fields :title, :slug, :state, :layout
 

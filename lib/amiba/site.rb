@@ -1,14 +1,47 @@
+require 'fog'
+require 'webrick'
+
 module Amiba
   module Site
+
+    class Preview < Thor::Group
+      include Amiba::Generator
+
+      namespace :"site:preview"
+      class_option :port, :default => 4321
+
+      def create
+        invoke Amiba::Site::Generate
+      end
+
+      def preview
+        root = File.expand_path(File.join(Amiba::Configuration.site_dir, "public"))
+        logger = WEBrick::Log.new($stderr, WEBrick::Log::ERROR)
+        server = WEBrick::HTTPServer.new({:Port => options[:port], :DocumentRoot => root, :Logger => logger})
+
+        ['INT', 'TERM'].each {|signal| 
+          trap(signal) {server.shutdown}
+        }
+
+        say ""
+        say ""
+        say "Preview available at http://localhost:#{options[:port]}/"
+        say "To end, press Ctrl+C"
+
+        server.start
+      end
+    end
 
     class S3Upload < Thor::Group
       include Amiba::Generator
 
       namespace :"site:upload:s3"
 
-      class_option :credentials, default: :default
+      class_option :credentials, :default => :default
 
       def init_s3
+        cf = File.expand_path(File.join(Dir.pwd, ".fog"))
+        Fog.credentials_path = cf if File.exists? cf
         Fog.credential = options[:credentials].to_sym
         @s3 ||= Fog::Storage.new(:provider=>'AWS')
       end
@@ -32,7 +65,7 @@ module Amiba
         Dir[File.join(Amiba::Configuration.site_dir, "public", "**/*")].each do |ent|
           next if File.directory? ent
           path = File.expand_path ent
-          name = relpath(path, File.join(Amiba::Configuration.site_dir, "public"))
+          name = File.relpath(path, File.join(Amiba::Configuration.site_dir, "public"))
           data = File.open path
           file = @bucket.files.create(:key=>name, :body=>data, :public=>true)
           say_status "Uploaded", name, :green
@@ -51,10 +84,6 @@ module Amiba
 
       def location
         Amiba::Configuration.s3_location || "EU"
-      end
-
-      def relpath(fn, dir)
-        File.join(File.expand_path(fn).split(File::SEPARATOR) - File.expand_path(dir).split(File::SEPARATOR))
       end
 
     end
@@ -94,33 +123,35 @@ module Amiba
       end
 
       def copy_images
-        directory "public/images", File.join(Amiba::Configuration.site_dir, "/public/images")
+        directory "public/images", File.join(Amiba::Configuration.site_dir, "public/images")
       end
       
       def copy_css
-        directory "public/css", File.join(Amiba::Configuration.site_dir, "/public/css")
+        Dir.glob('public/css/*.css').each do |css_file|
+          copy_file css_file, File.join(Amiba::Configuration.site_dir, "public/css/", File.basename(css_file))
+        end
       end
       
       def process_and_copy_sass
-        Dir.glob('public/css/*.scss').each do |scss_file|
-          create_file "site/css/#{File.basename(scss_file).gsub('scss', 'css')}" do
+        Dir.glob('public/css/[^_]*.scss').each do |scss_file|
+          create_file File.join(Amiba::Configuration.site_dir,"public/css/", File.basename(scss_file).gsub('scss', 'css')) do
             Tilt.new(scss_file).render
           end
         end
       end
     
-      def build_pages
-        Dir.glob('pages/[^_]*').each do |page_file|
-          ext = File.extname page_file
-          page = Amiba::Source::Page.new(File.basename(page_file, ext), ext.sub(/^\./,""))
-          next unless page.state == "published"
-          build_page page
-        end
-      end
-
       def build_entries
         Amiba::Source::Entry.all.each do |entry|
           build_page entry
+        end
+      end
+
+      def build_pages
+        Dir.glob('pages/**/[^_]*').each do |page_file|
+          next if File.directory? page_file
+          page = Amiba::Source::Page.new(File.relpath(page_file, "pages"))
+          next unless page.state == "published"
+          build_page page
         end
       end
 
@@ -140,8 +171,12 @@ module Amiba
       def build_feeds
         Dir.glob('feeds/*.builder').each do |feed_file|
           feed = Amiba::Source::Feed.new(feed_file)
-          create_file(feed.output_filename) do
-            Tilt.new(feed.filename).render(Amiba::Scope.new(feed), :xml => Builder::XmlMarkup.new)
+          begin
+            create_file(feed.output_filename) do
+              Tilt.new(feed.filename).render(Amiba::Scope.new(feed), :xml => Builder::XmlMarkup.new)
+            end
+          rescue
+            puts "Unable to process #{feed.name}, skipping" 
           end
         end
       end
@@ -158,8 +193,12 @@ module Amiba
       def build_page(page)
         layout = build_layout(page)
         create_file(page.staged_filename) do page.content end
-        create_file(page.output_filename) do
-          Tilt.new(layout.staged_filename).render(Amiba::Scope.new(page))
+        begin
+          create_file(page.output_filename) do
+            Tilt.new(layout.staged_filename).render(Amiba::Scope.new(page))
+          end
+        rescue
+          puts "Unable to process #{page.name}, skipping" 
         end
       end
 

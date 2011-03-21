@@ -4,7 +4,7 @@ $:.unshift lib unless $:.include?(lib)
  
 Gem::Specification.new do |s|
   s.name        = "amiba"
-  s.version     = "0.0.1"
+  s.version     = "0.0.6"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Steven Mohapi-Banks"]
   s.email       = ["s.mohapi-banks@digital-science.com"]
@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
  
   s.required_rubygems_version = ">= 1.3.6"
  
-  s.files        = Dir.glob("{bin,lib,templates}/**/*") + Dir.glob("templates/**/.empty_directory") + %w{Thorfile Gemfile templates/.amiba}
+  s.files        = Dir.glob("{bin,lib,templates}/**/*") + Dir.glob("templates/**/.empty_directory") + %w{Thorfile templates/.amiba}
   s.executable   = 'amiba'
   s.require_path = 'lib'
 
@@ -25,6 +25,8 @@ Gem::Specification.new do |s|
   s.add_dependency('activemodel',   '~> 3.0.4')
   s.add_dependency('i18n',          '~> 0.5.0')
   s.add_dependency('rdiscount',     '~> 1.6.8')
+  s.add_dependency('fog',           '>= 0.6.0')
+  s.add_dependency('grit',          '~> 2.4.1')
 
   s.add_development_dependency("rspec")
   s.add_development_dependency("rspec_tag_matchers")

@@ -7,7 +7,7 @@ module Amiba
 
       def method_missing(name, *args, &block)
         raise ArgumentError if args.length > 1
-        if name[-1] == '='
+        if name.to_s[-1] == '='
           write_setting(name[0..-2].to_sym, args[0])
         else
           read_setting(name)

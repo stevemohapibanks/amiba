@@ -35,11 +35,17 @@ module Amiba
     end
 
     module InstanceMethods
+      include Amiba::Repo
 
       attr_accessor :format
 
       def initialize(name, format='haml', metadata = nil, content = nil)
-        self.name = name
+        ext = File.extname name
+        fn = File.basename(name, ext)
+        dn = File.dirname name
+        f = dn == "." ? fn : File.join(dn, fn)
+
+        self.name = f
         self.format = format
         self.metadata = metadata
         self.content = content
@@ -73,6 +79,10 @@ module Amiba
 
       def metadata
         @metadata ||= source_valid? ? documents.first : {}
+      end
+
+      def pubdate
+        @metadata["pubdate"] ||= last_commit_date filename
       end
 
       protected

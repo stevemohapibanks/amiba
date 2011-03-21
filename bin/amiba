@@ -1,16 +1,7 @@
 #!/usr/bin/env ruby
 # -*- mode: ruby -*-
-if !File.exist?('Gemfile')
-  ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile", __FILE__)
-end
-
-ENV["AMIBA_BIN"] = "true"
-
-puts "AMIBA_BIN is " + ENV["AMIBA_BIN"]
-
 require 'rubygems'
-require 'bundler/setup'
-Bundler.require(:default)
+require 'amiba'
 
 $thor_runner = true
 Thor::Runner.start
