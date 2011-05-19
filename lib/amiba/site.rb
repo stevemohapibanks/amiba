@@ -198,7 +198,7 @@ module Amiba
             Tilt.new(layout.staged_filename).render(Amiba::Scope.new(page))
           end
         rescue
-          puts "Unable to process #{page.name}, skipping" 
+          puts "Unable to process #{page.name}: #{$!}, skipping" 
         end
       end
 
