@@ -43,6 +43,9 @@ module Amiba
         Tilt.new(self.staged_filename).render(Amiba::Scope.new(self))
       end
 
+      def ref
+        "#{category.to_s.downcase.pluralize}_#{name}"
+      end
     end
   end
 end
