@@ -38,6 +38,7 @@ module Amiba
       namespace :"site:upload:s3"
 
       class_option :credentials, :default => :default
+      class_option :target, :default => "site"
 
       def init_s3
         cf = File.expand_path(File.join(Dir.pwd, ".fog"))
@@ -79,7 +80,7 @@ module Amiba
 
       private
       def bucket
-        Amiba::Configuration.site_name
+        Amiba::Configuration.send(:"#{options[:target]}_name")
       end
 
       def location
