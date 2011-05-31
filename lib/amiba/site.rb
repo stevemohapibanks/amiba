@@ -9,8 +9,10 @@ module Amiba
 
       namespace :"site:preview"
       class_option :port, :default => 4321
+      # class_option :drafts, :default => false
 
       def create
+        # invoke Amiba::Site::Generate, [], :drafts => options[:drafts]
         invoke Amiba::Site::Generate
       end
 
@@ -93,6 +95,7 @@ module Amiba
       include Amiba::Generator
 
       namespace :"site:generate"
+      class_option :drafts, :default => false
 
       def self.source_root
         Dir.pwd
@@ -142,7 +145,7 @@ module Amiba
       end
     
       def build_entries
-        Amiba::Source::Entry.all.each do |entry|
+        Amiba::Source::Entry.send(state).each do |entry|
           build_page entry
         end
       end
@@ -151,7 +154,7 @@ module Amiba
         Dir.glob('pages/**/[^_]*').each do |page_file|
           next if File.directory? page_file
           page = Amiba::Source::Page.new(File.relpath(page_file, "pages"))
-          next unless page.state == "published"
+          next unless (page.state == "published" || options[:drafts])
           build_page page
         end
       end
@@ -183,6 +186,14 @@ module Amiba
       end
 
       private
+
+      def state
+        if options[:drafts]
+          :any
+        else
+          :published
+        end
+      end
 
       def build_layout(page)
         layout = Amiba::Source::Layout.new(page.layout)
