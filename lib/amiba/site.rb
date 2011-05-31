@@ -180,7 +180,7 @@ module Amiba
               Tilt.new(feed.filename).render(Amiba::Scope.new(feed), :xml => Builder::XmlMarkup.new)
             end
           rescue
-            puts "Unable to process #{feed.name}, skipping" 
+            say_status "Failed", "Unable to process #{feed.name}, skipping", :red
           end
         end
       end
@@ -210,7 +210,7 @@ module Amiba
             Tilt.new(layout.staged_filename).render(Amiba::Scope.new(page))
           end
         rescue
-          puts "Unable to process #{page.name}: #{$!}, skipping" 
+          say_status "Failed", "Unable to process #{page.name}: #{$!}, skipping", :red
         end
       end
 
