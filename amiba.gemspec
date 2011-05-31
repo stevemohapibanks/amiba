@@ -19,12 +19,12 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
 
   s.add_dependency('thor',          '~> 0.14.6')
-  s.add_dependency('tilt',          '~> 1.2.1')
+  s.add_dependency('tilt',          '~> 1.3.2')
   s.add_dependency('haml',          '~> 3.0.25')
   s.add_dependency('activesupport', '~> 3.0.4')
   s.add_dependency('activemodel',   '~> 3.0.4')
   s.add_dependency('i18n',          '~> 0.5.0')
-  s.add_dependency('rdiscount',     '~> 1.6.8')
+  s.add_dependency('redcarpet')
   s.add_dependency('fog',           '>= 0.7.0')
   s.add_dependency('grit',          '~> 2.4.1')
 

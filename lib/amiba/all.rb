@@ -3,7 +3,7 @@ require 'haml'
 require 'active_support/all'
 require 'active_model'
 require 'i18n'
-require 'rdiscount'
+require 'redcarpet'
 
 require 'amiba/core_ext/file'
 require 'amiba/core_ext/symbol'
