@@ -180,7 +180,7 @@ module Amiba
               Tilt.new(feed.filename).render(Amiba::Scope.new(feed), :xml => Builder::XmlMarkup.new)
             end
           rescue
-            say_status "Failed", "Unable to process #{feed.name}, skipping", :red
+            say_status "Failed", "Unable to process #{feed.name}: #{$!}, skipping", :red
           end
         end
       end
