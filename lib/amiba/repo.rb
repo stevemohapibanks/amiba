@@ -26,5 +26,8 @@ module Amiba
       filenames.map {|fn| last_commit_date(fn)}
     end
     
+    def push(remote=nil,branch=nil,args={}) 
+      repo.git.push(args,remote,branch)
+    end
   end
 end

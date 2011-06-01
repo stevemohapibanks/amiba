@@ -36,6 +36,7 @@ module Amiba
 
     class S3Upload < Thor::Group
       include Amiba::Generator
+      include Amiba::Repo
 
       namespace :"site:upload:s3"
 
@@ -73,6 +74,11 @@ module Amiba
           file = @bucket.files.create(:key=>name, :body=>data, :public=>true)
           say_status "Uploaded", name, :green
         end
+      end
+
+      def git_push
+        push
+        say_status "Changes pushed to git", "", :green
       end
 
       def complete
