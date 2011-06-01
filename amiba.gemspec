@@ -4,10 +4,10 @@ $:.unshift lib unless $:.include?(lib)
  
 Gem::Specification.new do |s|
   s.name        = "amiba"
-  s.version     = "0.0.7"
+  s.version     = "0.0.8"
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Steven Mohapi-Banks"]
-  s.email       = ["s.mohapi-banks@digital-science.com"]
+  s.authors     = ["Steven Mohapi-Banks", "Thom May"]
+  s.email       = ["s.mohapi-banks@digital-science.com","thom@digital-science.com"]
   s.summary     = "Simple gem to build a static web-site"
   s.description = "Description TBD"
   s.homepage    = "http://www.digital-science.com"
