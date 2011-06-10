@@ -203,6 +203,10 @@ module Amiba
 
       def build_layout(page)
         layout = Amiba::Source::Layout.new(page.layout)
+        # Fall back to the default layout if we can't find the requested one
+        if layout.new?
+          layout = Amiba::Source::Layout.new("default")
+        end
         return layout if File.exists? layout.staged_filename
         create_file(layout.staged_filename) do layout.content end
         layout

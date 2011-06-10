@@ -20,6 +20,7 @@ module Amiba
         self.name = name
         self.format = format
         self.metadata = metadata
+        self.metadata["layout"] ||= category.to_s
         self.content = content
       end
 
