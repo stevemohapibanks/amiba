@@ -47,6 +47,17 @@ end
 
 Dir.chdir options[:target]
 
+# category:
+# select wp_terms.name from wp_terms inner join wp_term_relationships on wp_terms.term_id=wp_term_relationships.term_taxonomy_id where object_id in (select ID from wp_posts where post_parent = ? or ID=?) 
+
+#images for post:
+#select * from wp_postmeta where post_id in (select ID from wp_posts where post_parent = 568 or ID=568)
+
+#post:
+#select * from wp_posts where post_parent = NULL
+#select * from wp_posts where post_parent = 568
+
+#change vector - look for post_type revision, figure out the highest id, stash as metadata
 
 DB = Sequel.connect(:adapter=>options[:dbtype], :host => options[:dbhost], :database=>options[:db], :user => options[:dbuser], :password => options[:dbpass], :encoding => 'utf8')
 Sequel::MySQL.convert_invalid_date_time = nil 
