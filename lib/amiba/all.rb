@@ -4,7 +4,7 @@ require 'active_support/all'
 require 'active_model'
 require 'i18n'
 require 'redcarpet'
-Tilt.register 'markdown', Tilt::RedcarpetTemplate
+Tilt.prefer Tilt::RedcarpetTemplate
 
 require 'amiba/core_ext/file'
 require 'amiba/core_ext/symbol'

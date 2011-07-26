@@ -9,10 +9,8 @@ module Amiba
 
       namespace :"site:preview"
       class_option :port, :default => 4321
-      # class_option :drafts, :default => false
 
       def create
-        # invoke Amiba::Site::Generate, [], :drafts => options[:drafts]
         invoke Amiba::Site::Generate
       end
 
@@ -217,7 +215,7 @@ module Amiba
         create_file(page.staged_filename) do page.content end
         begin
           create_file(page.output_filename) do
-            Tilt.new(layout.staged_filename).render(Amiba::Scope.new(page))
+            Tilt.new(layout.staged_filename, :smartypants=>true).render(Amiba::Scope.new(page))
           end
         rescue
           say_status "Failed", "Unable to process #{page.name}: #{$!}, skipping", :red
