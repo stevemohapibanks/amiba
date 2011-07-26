@@ -4,7 +4,7 @@ $:.unshift lib unless $:.include?(lib)
  
 Gem::Specification.new do |s|
   s.name        = "amiba"
-  s.version     = "0.0.8"
+  s.version     = "0.0.9"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Steven Mohapi-Banks", "Thom May"]
   s.email       = ["s.mohapi-banks@digital-science.com","thom@digital-science.com"]
@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
   s.add_dependency('thor',          '~> 0.14.6')
   s.add_dependency('tilt',          '~> 1.3.2')
   s.add_dependency('haml',          '~> 3.0.25')
-  s.add_dependency('activesupport', '~> 3.0.4')
   s.add_dependency('activemodel',   '~> 3.0.4')
   s.add_dependency('i18n',          '~> 0.5.0')
   s.add_dependency('redcarpet')
