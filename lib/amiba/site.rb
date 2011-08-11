@@ -4,6 +4,17 @@ require 'webrick'
 module Amiba
   module Site
 
+    class Editor < Thor::Group
+      include Amiba::Generator
+
+      namespace :"site:editor"
+      class_option :port, :default => 4321
+
+      def edit
+        require 'amiba/frontend/app'
+        Protozoa::App.run!(options)
+      end
+    end
     class Preview < Thor::Group
       include Amiba::Generator
 

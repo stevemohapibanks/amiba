@@ -1,0 +1,36 @@
+<div id="wiki-wrapper" class="results">
+<div id="head">
+  <h1>{{title}}</h1>
+  <ul class="actions">
+    <li class="minibutton"><a href="/"
+       class="action-edit-page">Home</a></li>
+<li class="minibutton"><a href="/entries/create" class="action-edit-page">New Page</a></li>
+  </ul>
+  {{>searchbar}}
+</div>
+<div id="results">
+
+{{#has_entries}}
+  <ul>
+    {{#entries}}
+    <li>
+      <a href="/entries{{link}}">{{category}} &mdash; {{title}}</a> 
+    </li>
+    {{/entries}}
+  </ul>
+{{/has_entries}}
+
+{{#no_entries}}
+  <p id="no-entries">
+    There are no pages in <strong>{{ref}}</strong>.
+  </p>
+{{/no_entries}}
+
+</div>
+<div id="footer">
+  <ul class="actions">
+    <li class="minibutton"><a href="#">Back to Top</a></li>
+  </ul>
+</div>
+</div>
+
