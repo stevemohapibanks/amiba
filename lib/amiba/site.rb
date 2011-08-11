@@ -8,7 +8,7 @@ module Amiba
       include Amiba::Generator
 
       namespace :"site:editor"
-      class_option :port, :default => 4321
+      class_option :port, :default => 4567
 
       def edit
         require 'amiba/frontend/app'
@@ -154,7 +154,7 @@ module Amiba
       def process_and_copy_sass
         Dir.glob('public/css/[^_]*.scss').each do |scss_file|
           create_file File.join(Amiba::Configuration.site_dir,"public/css/", File.basename(scss_file).gsub('scss', 'css')) do
-            Tilt.new(scss_file).render
+            Amiba::Tilt.new(scss_file).render
           end
         end
       end
@@ -192,7 +192,7 @@ module Amiba
           feed = Amiba::Source::Feed.new(feed_file)
           begin
             create_file(feed.output_filename) do
-              Tilt.new(feed.filename).render(Amiba::Scope.new(feed), :xml => Builder::XmlMarkup.new)
+              Amiba::Tilt.new(feed.filename).render(Amiba::Scope.new(feed), :xml => Builder::XmlMarkup.new)
             end
           rescue
             say_status "Failed", "Unable to process #{feed.name}: #{$!}, skipping", :red
@@ -216,17 +216,14 @@ module Amiba
         if layout.new?
           layout = Amiba::Source::Layout.new("default")
         end
-        return layout if File.exists? layout.staged_filename
-        create_file(layout.staged_filename) do layout.content end
         layout
       end
 
       def build_page(page)
         layout = build_layout(page)
-        create_file(page.staged_filename) do page.content end
         begin
           create_file(page.output_filename) do
-            Tilt.new(layout.staged_filename, :smartypants=>true).render(Amiba::Scope.new(page))
+            Amiba::Tilt.new(layout, :smartypants=>true).render(Amiba::Scope.new(page))
           end
         rescue
           say_status "Failed", "Unable to process #{page.name}: #{$!}, skipping", :red

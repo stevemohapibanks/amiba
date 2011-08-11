@@ -25,7 +25,7 @@ module Amiba
 
     def partial(path, locals={})
       p = Amiba::Source::Partial.new path
-      Tilt.new(p.filename).render(Amiba::Scope.new(p), locals)
+      Amiba::Tilt.new(p.filename).render(Amiba::Scope.new(p), locals)
     end
 
     def site_name
@@ -47,7 +47,7 @@ module Amiba
     protected
 
     def page_renderer
-      Tilt.new page.staged_filename
+      Amiba::Tilt.new page
     end
   end
 end

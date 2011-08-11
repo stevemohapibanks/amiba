@@ -28,9 +28,7 @@ module Amiba
         File.join("entries", category.to_s.downcase.pluralize, name + ".#{format.to_s}")
       end
       
-      def staged_filename
-        File.join(Amiba::Configuration.staged_dir, filename)
-      end
+      alias_method :staged_filename, :filename
 
       def output_filename
         File.join(Amiba::Configuration.site_dir, 'public', category.to_s.downcase.pluralize, "#{name}.html")
@@ -41,7 +39,7 @@ module Amiba
       end
 
       def render
-        Tilt.new(self.staged_filename).render(Amiba::Scope.new(self))
+        Amiba::Tilt.new(self).render(Amiba::Scope.new(self))
       end
 
       def ref

@@ -11,6 +11,7 @@ require 'amiba/core_ext/symbol'
 
 require 'amiba/repo'
 require 'amiba/configuration'
+require 'amiba/tilt'
 
 require 'amiba/source'
 require 'amiba/source/entry_finder'

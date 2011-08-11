@@ -14,10 +14,8 @@ module Amiba
         @filename ||= File.join("pages", @dir, "_#{@name}.haml")
       end
 
-      def staged_filename
-        File.join(Amiba::Configuration.staged_dir, filename)
-      end
-      alias_method :output_filename, :staged_filename
+      alias_method :output_filename, :filename
+      alias_method :staged_filename, :filename
 
     end
   end
