@@ -41,6 +41,10 @@ module Amiba
         entries.empty?
       end
 
+      def all
+        entries
+      end
+
       def entries
         result = (scopes[:category] || CategoryScope.new).apply
         result = (scopes[:state] || StateScope.new).apply(result)
