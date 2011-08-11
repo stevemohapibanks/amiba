@@ -85,6 +85,15 @@ module Amiba
         @metadata["pubdate"] ||= last_commit_date filename
       end
 
+      def metadata=(meta)
+        m = meta ? metadata.merge(meta) : metadata
+        @metadata = HashWithIndifferentAccess.new(m)
+      end
+
+      def content=(c)
+        @content = c ? c : documents.last
+      end
+
       protected
 
       def method_missing(method_sym, *args, &block)
@@ -99,16 +108,6 @@ module Amiba
 
       def name=(n)
         @name = n
-      end
-
-      def metadata=(meta)
-        m = meta ? metadata.merge(meta) : metadata
-        @metadata = HashWithIndifferentAccess.new(m)
-      end
-
-      def content=(c)
-        return @content unless @content.nil?
-        @content = self.new? ? c : documents.last
       end
 
       def documents
