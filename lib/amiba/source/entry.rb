@@ -8,6 +8,7 @@ module Amiba
       
       ActiveSupport::Inflector.inflections do |inflect|
         inflect.uncountable "blog"
+        inflect.uncountable "previous"
       end
 
       attr_accessor :category

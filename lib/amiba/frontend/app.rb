@@ -2,7 +2,6 @@ require 'cgi'
 require 'sinatra'
 require 'amiba'
 require 'mustache/sinatra'
-require 'pp'
 
 require 'amiba/frontend/views/layout'
 require 'amiba/frontend/views/editable'

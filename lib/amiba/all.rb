@@ -1,3 +1,5 @@
+require 'yaml'
+YAML::ENGINE.yamler= 'syck'
 require 'tilt'
 require 'haml'
 require 'active_support/all'

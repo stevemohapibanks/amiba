@@ -12,11 +12,11 @@ module Protozoa
       end
 
       def author
-        @page.author
+        @page.new? ? "No Author" : @page.author
       end
 
       def date
-        @page.pubdate.strftime("%Y-%m-%d %H:%M:%S")
+        @page.new? ? DateTime.now.strftime("%Y-%m-%d %H:%M:%S") : @page.pubdate.strftime("%Y-%m-%d %H:%M:%S")
       end
       
       def editable
