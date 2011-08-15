@@ -95,12 +95,8 @@ module Amiba
 
       def method_missing(method_sym, *args, &block)
         md = method_sym.to_s.gsub(/=$/,'')
-        if !metadata[md.to_s].nil?
-          self.class.define_metadata_accessor(md)
-          send(method_sym, *args, &block)
-        else
-          super
-        end
+        self.class.define_metadata_accessor(md)
+        send(method_sym, *args, &block)
       end
 
       def name=(n)
