@@ -21,7 +21,6 @@ module Amiba
       def output_filename
         File.join(Amiba::Configuration.site_dir, "public/#{name}.#{type}")
       end
-      alias_method :staged_filename, :filename
 
       def link
         URI.escape "/#{name}.#{type}"

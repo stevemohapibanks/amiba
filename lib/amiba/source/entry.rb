@@ -29,8 +29,6 @@ module Amiba
         File.join("entries", category.to_s.downcase.pluralize, name + ".#{format.to_s}")
       end
       
-      alias_method :staged_filename, :filename
-
       def output_filename
         File.join(Amiba::Configuration.site_dir, 'public', category.to_s.downcase.pluralize, "#{name}.html")
       end

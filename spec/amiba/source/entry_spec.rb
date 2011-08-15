@@ -19,9 +19,6 @@ describe Amiba::Source::Entry do
       it "should have a source filename" do
         @entry.filename.should == 'entries/posts/new_post.haml'
       end
-      it "should have a staged filename" do
-        @entry.staged_filename.should == "staged/entries/posts/new_post.haml"
-      end
       it "should have an output filename" do
         @entry.output_filename.should == 'site/public/posts/new_post.html'
         @entry.category = "entry"

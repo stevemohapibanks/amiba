@@ -55,7 +55,6 @@ module Amiba
         @filename ||= File.join(self.class.pluralized_name, "#{name}.#{format}")
       end
 
-      alias_method :staged_filename, :filename
 
       def new?
         !File.exist?(filename)

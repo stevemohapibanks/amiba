@@ -15,7 +15,6 @@ module Amiba
       end
 
       alias_method :output_filename, :filename
-      alias_method :staged_filename, :filename
 
     end
   end

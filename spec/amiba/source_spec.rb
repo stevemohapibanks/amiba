@@ -66,9 +66,6 @@ describe Amiba::Source do
           @page.title.should == "Title"
           @page.layout.should == "custom"
         end
-        it "should have a staged filename" do
-          @page.staged_filename.should == 'staged/pages/existing_page.markdown'
-        end
       end
 
       describe "with new metadata" do
