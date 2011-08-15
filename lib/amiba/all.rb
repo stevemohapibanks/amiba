@@ -15,6 +15,8 @@ require 'amiba/repo'
 require 'amiba/configuration'
 require 'amiba/tilt'
 
+require 'amiba/scope'
+
 require 'amiba/source'
 require 'amiba/source/entry_finder'
 require 'amiba/source/entry'
