@@ -63,6 +63,7 @@ module Protozoa
     post %r{/entries/edit/(.+?)/(.+)\.html$} do
       @page = Amiba::Source::Entry.new(params[:captures][0],params[:captures][1],"markdown")
       @page.content = params[:content]
+      @page.author = env["X-DSCI-USER"] || "Anonymous"
       @page.save do |filename, file_data|
         File.open(filename, 'w') { |f| f.write(file_data) }
       end
@@ -90,6 +91,7 @@ module Protozoa
       name = params[:title].parameterize
       metadata  = {state: "published", title: params[:title]}
       @page = Amiba::Source::Entry.new(params[:category], name, "markdown", metadata, params[:content])
+      @page.author = env["X-DSCI-USER"] || "Anonymous"
       @page.save do |filename, file_data|
         File.open(filename, 'w') { |f| f.write(file_data) }
       end
