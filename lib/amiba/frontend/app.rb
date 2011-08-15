@@ -67,7 +67,7 @@ module Protozoa
       @page.save do |filename, file_data|
         File.open(filename, 'w') { |f| f.write(file_data) }
       end
-      # add_and_commit @page.filename
+      add_and_commit @page.filename
       # push
       redirect "/entries#{@page.link}"
     end
@@ -95,7 +95,7 @@ module Protozoa
       @page.save do |filename, file_data|
         File.open(filename, 'w') { |f| f.write(file_data) }
       end
-      # add_and_commit @page.filename
+      add_and_commit @page.filename
       # push
       redirect "/entries#{@page.link}"
     end
