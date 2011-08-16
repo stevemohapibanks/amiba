@@ -21,6 +21,7 @@ module Amiba
 
       def init_source
         @source = Amiba::Source::Page.new(name, format, options, Templates.send(format.to_sym))
+        @entry = Amiba::Source::PageEntry.new(@source)
       end
 
       def should_not_exist
@@ -40,10 +41,14 @@ module Amiba
         @source.save do |filename, file_data|
           create_file filename, file_data
         end
+        @entry.save do |filename, file_data|
+          create_file filename, file_data
+        end
       end
 
       def add_to_git
         add_and_commit @source.filename
+        add_and_commit @entry.filename
       end
 
     end
@@ -127,7 +132,7 @@ module Amiba
     class Templates
       class << self
         def haml
-          "%h1 Title\n%p Body\n"
+          "= content\n"
         end
 
         def markdown

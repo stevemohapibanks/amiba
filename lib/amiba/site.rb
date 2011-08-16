@@ -176,6 +176,7 @@ module Amiba
 
       def build_json
         Dir.glob('entries/*').each do |cat|
+          next unless File.directory? cat
           c = File.basename cat
           create_file(File.join(Amiba::Configuration.site_dir, "public", c, "latest.json")) do
             Amiba::Source::Entry.send(c.to_sym.pluralize).limit(20).each.inject([]) do |acc, ent|

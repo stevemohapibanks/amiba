@@ -16,7 +16,16 @@ module Amiba
     end
 
     def content
-      page_renderer.render(self)
+      if @page.is_a? Amiba::Source::Page
+        c = Amiba::Source::PageEntry.new(page)
+        if c.new?
+          Amiba::Tilt.new(@page).render(self)
+        else
+          Amiba::Tilt.new(@page).render(Amiba::Scope.new(c))
+        end
+      else
+        Amiba::Tilt.new(@page).render(self)
+      end
     end
 
     def entries
@@ -44,10 +53,5 @@ module Amiba
       end
     end
 
-    protected
-
-    def page_renderer
-      Amiba::Tilt.new page
-    end
   end
 end

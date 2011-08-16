@@ -45,5 +45,28 @@ module Amiba
         "#{category.to_s.downcase.pluralize}_#{name}"
       end
     end
+
+    class PageEntry
+      include Amiba::Source
+
+      def initialize(page)
+        self.name = page.name
+        self.format = "markdown"
+        @content =  File.read(filename) unless self.new? 
+      end
+
+      def save(&block)
+        return false unless valid?
+        yield filename, content
+        true
+      end
+
+      def filename
+        File.join("entries", name + ".#{format.to_s}")
+      end
+
+      alias_method :output_filename, :filename
+    end
+
   end
 end
