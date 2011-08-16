@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency('activemodel',   '~> 3.0.4')
   s.add_dependency('i18n',          '~> 0.5.0')
   s.add_dependency('redcarpet')
+  s.add_dependency('rdiscount')
   s.add_dependency('fog',           '>= 0.7.0')
   s.add_dependency('grit',          '~> 2.4.1')
 
