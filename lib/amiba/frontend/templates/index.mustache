@@ -10,6 +10,7 @@
 </div>
 <div id="results">
 
+<h2> Individual Entries</h2>
 {{#has_entries}}
   <ul>
     {{#entries}}
@@ -19,6 +20,15 @@
     {{/entries}}
   </ul>
 {{/has_entries}}
+
+<h2>Pages</h2>
+<ul>
+  {{#pages}}
+  <li>
+    <a href="/pages{{link}}">{{title}}</a> 
+  </li>
+  {{/pages}}
+</ul>
 
 {{#no_entries}}
   <p id="no-entries">

@@ -40,12 +40,46 @@ module Protozoa
       enable :logging, :raise_errors, :dump_errors
     end
 
+    helpers do
+      def all_pages
+        Dir.glob('pages/**/[^_]*').inject([]) do |acc, page_file|
+          if !File.directory? page_file
+            page = Amiba::Source::Page.new(File.relpath(page_file, "pages"))
+            ent = Amiba::Source::PageEntry.new(page)
+            acc << page unless ent.new?
+          end
+          acc
+        end
+      end
+    end
+
     get '/' do
+      pull
       @entries = Amiba::Source::Entry.any.all.sort {|a,b| a.category <=> b.category }
+      @pages = all_pages
       mustache :index
     end
 
+    get %r{/pages/edit/(.+)\.html$} do
+      pull
+      @page = Amiba::Source::Page.new(params[:captures][0],"haml")
+      @entry = Amiba::Source::PageEntry.new(@page)
+      @content = @entry.content
+      @name = @page.title
+      mustache :edit
+    end
+
+    get %r{/pages/(.+)\.html$} do
+      @page = Amiba::Source::Page.new(params[:captures][0],"haml")
+      @entry = Amiba::Source::PageEntry.new(@page)
+      @content = @entry.render
+      @name = @page.title
+      @editable = true
+      mustache :page
+    end
+
     get %r{/entries/edit/(.+?)/(.+)\.html$} do
+      pull
       @page = Amiba::Source::Entry.new(params[:captures][0],params[:captures][1],"markdown")
       @content = @page.content
       @name = @page.title
@@ -60,7 +94,21 @@ module Protozoa
       mustache :page
     end
 
+    post %r{/pages/edit/(.+)\.html$} do
+      pull
+      @page = Amiba::Source::Page.new(params[:captures][0],"haml")
+      @entry = Amiba::Source::PageEntry.new(@page)
+      @entry.content = params[:content]
+      @entry.save do |filename, file_data|
+        File.open(filename, 'w') { |f| f.write(file_data) }
+      end
+      add_and_commit @entry.filename
+      push
+      redirect "/pages#{@page.link}"
+    end
+
     post %r{/entries/edit/(.+?)/(.+)\.html$} do
+      pull
       @page = Amiba::Source::Entry.new(params[:captures][0],params[:captures][1],"markdown")
       @page.content = params[:content]
       @page.author = env["X-DSCI-USER"] || "Anonymous"
@@ -68,7 +116,7 @@ module Protozoa
         File.open(filename, 'w') { |f| f.write(file_data) }
       end
       add_and_commit @page.filename
-      # push
+      push
       redirect "/entries#{@page.link}"
     end
 
@@ -88,6 +136,7 @@ module Protozoa
     end
 
     post '/entries/create' do
+      pull
       name = params[:title].parameterize
       metadata  = {state: "published", title: params[:title]}
       @page = Amiba::Source::Entry.new(params[:category], name, "markdown", metadata, params[:content])
@@ -96,7 +145,7 @@ module Protozoa
         File.open(filename, 'w') { |f| f.write(file_data) }
       end
       add_and_commit @page.filename
-      # push
+      push
       redirect "/entries#{@page.link}"
     end
 

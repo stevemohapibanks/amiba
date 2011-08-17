@@ -1,7 +1,7 @@
 module Protozoa
   module Views
     class Index < Layout
-      attr_reader :entries, :ref
+      attr_reader :entries, :ref, :pages
 
       def title
         "All pages for #{Amiba::Configuration.site_name}"

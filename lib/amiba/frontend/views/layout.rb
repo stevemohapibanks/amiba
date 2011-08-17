@@ -16,6 +16,14 @@ module Protozoa
         "Home"
       end
 
+      def view_url
+        if @page.class == Amiba::Source::Entry
+          "/entries#{@page.link}"
+        else
+          "/pages#{@page.link}"
+        end
+      end
+
       def edit_url
         if @page.class == Amiba::Source::Entry
           "/entries/edit#{@page.link}"
