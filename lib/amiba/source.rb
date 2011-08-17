@@ -124,6 +124,10 @@ module Amiba
       VALID_FORMATS = %w{haml markdown}
       validates_presence_of :layout, :title, :description, :category, :state
 
+      def link
+        URI.escape( ["", "#{name}.html"].join("/") )
+      end
+
       def output_filename
         File.join(Amiba::Configuration.site_dir, "public/#{name}.html")
       end
