@@ -4,7 +4,7 @@ $:.unshift lib unless $:.include?(lib)
  
 Gem::Specification.new do |s|
   s.name        = "amiba"
-  s.version     = "0.0.9"
+  s.version     = "1.0.0"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Steven Mohapi-Banks", "Thom May"]
   s.email       = ["s.mohapi-banks@digital-science.com","thom@digital-science.com"]
