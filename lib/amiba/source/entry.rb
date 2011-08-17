@@ -65,6 +65,10 @@ module Amiba
         File.join("entries", name + ".#{format.to_s}")
       end
 
+      def render
+        Amiba::Tilt.new(self).render(Amiba::Scope.new(self))
+      end
+
       alias_method :output_filename, :filename
     end
 
