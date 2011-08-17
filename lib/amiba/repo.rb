@@ -29,5 +29,9 @@ module Amiba
     def push(remote=nil,branch=nil,args={}) 
       repo.git.push(args,remote,branch)
     end
+
+    def pull
+      repo.git.pull
+    end
   end
 end
