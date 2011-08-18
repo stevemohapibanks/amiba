@@ -1,5 +1,7 @@
 require 'yaml'
-YAML::ENGINE.yamler= 'syck'
+if RUBY_VERSION > "1.9.0"
+  YAML::ENGINE.yamler= 'syck'
+end
 require 'tilt'
 require 'haml'
 require 'active_support/all'
