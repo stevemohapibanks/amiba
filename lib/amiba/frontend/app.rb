@@ -40,19 +40,6 @@ module Protozoa
       enable :logging, :raise_errors, :dump_errors
     end
 
-    helpers do
-      def all_pages
-        Dir.glob('pages/**/[^_]*').inject([]) do |acc, page_file|
-          if !File.directory? page_file
-            page = Amiba::Source::Page.new(File.relpath(page_file, "pages"))
-            ent = Amiba::Source::PageEntry.new(page)
-            acc << page unless ent.new?
-          end
-          acc
-        end
-      end
-    end
-
     get '/' do
       pull
       @entries = Amiba::Source::Entry.any.all.sort {|a,b| a.category <=> b.category }
@@ -102,7 +89,7 @@ module Protozoa
       @entry.save do |filename, file_data|
         File.open(filename, 'w') { |f| f.write(file_data) }
       end
-      add_and_commit @entry.filename
+      commit @entry.filename
       push
       redirect "/pages#{@page.link}"
     end
@@ -115,7 +102,7 @@ module Protozoa
       @page.save do |filename, file_data|
         File.open(filename, 'w') { |f| f.write(file_data) }
       end
-      add_and_commit @page.filename
+      commit @page.filename
       push
       redirect "/entries#{@page.link}"
     end
@@ -144,120 +131,40 @@ module Protozoa
       @page.save do |filename, file_data|
         File.open(filename, 'w') { |f| f.write(file_data) }
       end
-      add_and_commit @page.filename
+      commit @page.filename
       push
       redirect "/entries#{@page.link}"
     end
-
-    # post '/revert/:page/*' do
-    #   wiki  = Gollum::Wiki.new(settings.gollum_path, settings.wiki_options)
-    #   @name = params[:page]
-    #   @page = wiki.page(@name)
-    #   shas  = params[:splat].first.split("/")
-    #   sha1  = shas.shift
-    #   sha2  = shas.shift
-
-    #   if wiki.revert_page(@page, sha1, sha2, commit_message)
-    #     redirect "/#{CGI.escape(@name)}"
-    #   else
-    #     sha2, sha1 = sha1, "#{sha1}^" if !sha2
-    #     @versions = [sha1, sha2]
-    #     diffs     = wiki.repo.diff(@versions.first, @versions.last, @page.path)
-    #     @diff     = diffs.first
-    #     @message  = "The patch does not apply."
-    #     mustache :compare
-    #   end
-    # end
-
-    # get '/history/:name' do
-    #   @name     = params[:name]
-    #   wiki      = Gollum::Wiki.new(settings.gollum_path, settings.wiki_options)
-    #   @page     = wiki.page(@name)
-    #   @page_num = [params[:page].to_i, 1].max
-    #   @versions = @page.versions :page => @page_num
-    #   mustache :history
-    # end
-
-    # post '/compare/:name' do
-    #   @versions = params[:versions] || []
-    #   if @versions.size < 2
-    #     redirect "/history/#{CGI.escape(params[:name])}"
-    #   else
-    #     redirect "/compare/%s/%s...%s" % [
-    #       CGI.escape(params[:name]),
-    #       @versions.last,
-    #       @versions.first]
-    #   end
-    # end
-
-    # get '/compare/:name/:version_list' do
-    #   @name     = params[:name]
-    #   @versions = params[:version_list].split(/\.{2,3}/)
-    #   wiki      = Gollum::Wiki.new(settings.gollum_path, settings.wiki_options)
-    #   @page     = wiki.page(@name)
-    #   diffs     = wiki.repo.diff(@versions.first, @versions.last, @page.path)
-    #   @diff     = diffs.first
-    #   mustache :compare
-    # end
 
     get %r{^/(javascript|css|images)} do
       halt 404
     end
 
-    get %r{/(.+?)/([0-9a-f]{40})} do
-      name = params[:captures][0]
-      wiki = Gollum::Wiki.new(settings.gollum_path, settings.wiki_options)
-      if page = wiki.page(name, params[:captures][1])
-        @page = page
-        @name = name
-        @content = page.formatted_data
-        @editable = true
-        mustache :page
-      else
-        halt 404
+    def all_pages
+      Dir.glob('pages/**/[^_]*').inject([]) do |acc, page_file|
+        if !File.directory? page_file
+          page = Amiba::Source::Page.new(File.relpath(page_file, "pages"))
+          ent = Amiba::Source::PageEntry.new(page)
+          acc << page unless ent.new?
+        end
+        acc
       end
-    end
-
-    # get '/search' do
-    #   @query = params[:q]
-    #   wiki = Gollum::Wiki.new(settings.gollum_path, settings.wiki_options)
-    #   @results = wiki.search @query
-    #   @name = @query
-    #   mustache :search
-    # end
-
-    # get '/*' do
-      # show_page_or_file(params[:splat].first)
-    # end
-
-    def show_page_or_file(name)
-      wiki = Gollum::Wiki.new(settings.gollum_path, settings.wiki_options)
-      if page = wiki.page(name)
-        @page = page
-        @name = name
-        @content = page.formatted_data
-        @editable = true
-        mustache :page
-      elsif file = wiki.file(name)
-        content_type file.mime_type
-        file.raw_data
-      else
-        @name = name
-        mustache :create
-      end
-    end
-
-    def update_wiki_page(wiki, page, content, commit_message, name = nil, format = nil)
-      return if !page ||  
-        ((!content || page.raw_data == content) && page.format == format)
-      name    ||= page.name
-      format    = (format || page.format).to_sym
-      content ||= page.raw_data
-      wiki.update_page(page, name, format, content.to_s, commit_message)
     end
 
     def commit_message
       { :message => params[:message] }
     end
+
+    # dsci specific
+    def actor
+      Grit::Actor.new(env["X-DSCI-USER"],env["X-DSCI-EMAIL"])
+    end
+
+    def commit(filename)
+      r = Grit::Repo.new(Dir.pwd)
+      r.add(filename)
+      r.index.commit(commit_message, nil, actor)
+    end
+
   end
 end
