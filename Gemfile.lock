@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    amiba (1.0.1)
+    amiba (1.0.2)
       activemodel (~> 3.0.4)
       fog (>= 0.7.0)
       grit (~> 2.4.1)
