@@ -152,7 +152,7 @@ module Protozoa
     end
 
     def commit_message
-      { :message => params[:message] }
+      params[:message]
     end
 
     # dsci specific
