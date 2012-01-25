@@ -12,6 +12,11 @@ describe Amiba::Commands::Create do
     File.exists?("test/.amiba").should be_true
   end
 
+  it "should initialise a new git repo" do
+    Amiba::Commands::Create.start(["test"])
+    Dir.exists?(".git").should be_true
+  end
+
   it "should create the project structure" do
     Amiba::Commands::Create.start(["test"])
     Dir.exists?("test/entries").should be_true
