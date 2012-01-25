@@ -4,7 +4,7 @@ $:.unshift lib unless $:.include?(lib)
  
 Gem::Specification.new do |s|
   s.name        = "amiba"
-  s.version     = "1.0.2"
+  s.version     = "1.0.3"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Steven Mohapi-Banks", "Thom May"]
   s.email       = ["s.mohapi-banks@digital-science.com","thom@digital-science.com"]
@@ -14,19 +14,19 @@ Gem::Specification.new do |s|
  
   s.required_rubygems_version = ">= 1.3.6"
  
-  s.files        = Dir.glob("{bin,lib,templates}/**/*") + Dir.glob("templates/**/.empty_directory") + %w{Thorfile templates/.amiba}
-  s.executable   = 'amiba'
-  s.require_path = 'lib'
+  s.files         = Dir.glob("{bin,lib,templates}/**/*") + Dir.glob("templates/**/.empty_directory") + %w{Thorfile templates/.amiba}
+  s.executables   = ["amiba"]
+  s.require_path  = "lib"
 
-  s.add_dependency('thor',          '~> 0.14.6')
-  s.add_dependency('tilt',          '~> 1.3.2')
-  s.add_dependency('haml',          '~> 3.0.25')
-  s.add_dependency('activemodel',   '~> 3.0.4')
-  s.add_dependency('i18n',          '~> 0.5.0')
-  s.add_dependency('redcarpet')
-  s.add_dependency('rdiscount')
-  s.add_dependency('fog',           '>= 0.7.0')
-  s.add_dependency('grit',          '~> 2.4.1')
+  s.add_dependency("thor",          '~> 0.14.6')
+  s.add_dependency("tilt",          '~> 1.3.2')
+  s.add_dependency("haml",          '~> 3.0.25')
+  s.add_dependency("activemodel",   '~> 3.0.4')
+  s.add_dependency("i18n",          '~> 0.5.0')
+  s.add_dependency("redcarpet")
+  s.add_dependency("rdiscount")
+  s.add_dependency("fog",           '>= 0.7.0')
+  s.add_dependency("grit",          '~> 2.4.1')
 
   s.add_development_dependency("rspec")
   s.add_development_dependency("rspec_tag_matchers")

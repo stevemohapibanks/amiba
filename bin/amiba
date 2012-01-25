@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
-# -*- mode: ruby -*-
+
 require 'rubygems'
 require 'amiba'
 
-$thor_runner = true
-Thor::Runner.start
+Amiba::Runner.start ARGV

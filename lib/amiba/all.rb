@@ -1,3 +1,5 @@
+require 'thor'
+require 'thor/group'
 require 'yaml'
 if RUBY_VERSION > "1.9.0"
   YAML::ENGINE.yamler= 'syck'
@@ -16,6 +18,8 @@ require 'amiba/core_ext/symbol'
 require 'amiba/repo'
 require 'amiba/configuration'
 require 'amiba/tilt'
+require 'amiba/util'
+require 'amiba/commands'
 
 require 'amiba/scope'
 

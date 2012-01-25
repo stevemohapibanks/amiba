@@ -4,8 +4,6 @@ require 'bundler/setup'
 
 Bundler.require(:default, :development)
 
-require 'amiba'
-require 'amiba/all'
 require 'factories'
 
 RSpec.configure do |config|
@@ -17,4 +15,8 @@ RSpec.configure do |config|
     Dir.chdir tmp_dir, &example
     FileUtils.rm_rf tmp_dir
   end
+end
+
+def make_this_an_amiba_project
+  FileUtils.cp(File.expand('../../templates/.amiba', __FILE__), Dir.pwd)
 end
